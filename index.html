@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./Assets/styles/bootstrap-5.3.5-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="./Assets/styles/style.css">
+  <link rel="stylesheet" media="screen and (min-width:768px)" href="./Assets/styles/desktop.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -19,8 +20,17 @@
 </head>
 
 <body>
-  
-
+  <div id="root-sec">
+    <nav class="navbar fixed-top bg-white shadow-sm py-3 px-2">
+      <div class="container" id="nav-flex">
+        <a class="navbar-brand" href="#">
+          <img src="./Assets/images/calendar.png" alt="calendar" width="35px" height="35px">
+          <span class="fw-bold text-primary fs-fluid-1 ms-1 align-middle">Interactive Event Calendar</span>
+        </a>
+        <button class="btn btn-primary fw-medium float-sm-end mt-2 mt-sm-0">Add New Event</button>
+      </div>
+    </nav>
+  </div>
   <script src="./Assets/styles/bootstrap-5.3.5-dist/js/bootstrap.bundle.js"></script>
   <script src="./Assets/scripts/script.js"></script>
 </body>

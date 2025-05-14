@@ -6,3 +6,36 @@
   box-sizing: border-box;
   font-family: "Manrope", sans-serif !important;
 }
+
+html {
+  font-size: 14px !important;
+}
+
+/* navbar section starts here */
+
+#nav-flex {
+  flex-direction: column;
+  justify-content: center;
+}
+
+img[alt="calendar"] {
+  transform: skewX(-15deg);
+}
+
+.fs-fluid-1 {
+  font-size: clamp(1.2rem, 1.014vw + 0.797rem, 1.875rem) !important;
+}
+
+
+/* navbar section ends here */
+
+
+
+
+
+@media screen and (min-width:450px) {
+  #nav-flex {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
