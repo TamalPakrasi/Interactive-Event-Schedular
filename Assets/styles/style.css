@@ -11,6 +11,10 @@ html {
   font-size: 14px !important;
 }
 
+.shadow-custom {
+  box-shadow: 0 0 7px var(--bs-border-color) !important;
+}
+
 /* navbar section starts here */
 
 #nav-flex {
@@ -26,12 +30,39 @@ img[alt="calendar"] {
   font-size: clamp(1.2rem, 1.014vw + 0.797rem, 1.875rem) !important;
 }
 
-
 /* navbar section ends here */
 
+/* container section starts here */
+
+/* secondary nav section starts here */
+
+.secondary-nav>input[type="text"] {
+  border-color: var(--bs-border-color) !important;
+  border-width: 1px !important;
+}
+
+.secondary-nav>input[type="text"]::placeholder {
+  font-weight: 400 !important;
+}
+
+.seconadry-nav-select:focus {
+  border-color: black !important;
+  outline: auto !important;
+  box-shadow: none !important;
+}
+
+/* secondary nav section ends here */
 
 
+/* container section ends here */
 
+
+/* media query section*/
+@media screen and (min-width:320px) {
+  select.seconadry-nav-select {
+    width: auto !important;
+  }
+}
 
 @media screen and (min-width:450px) {
   #nav-flex {

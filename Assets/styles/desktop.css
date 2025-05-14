@@ -4,6 +4,8 @@ html {
 
 /* navbar section starts here */
 
-
+.secondary-nav>input[type="text"] {
+  width: auto !important;
+}
 
 /* navbar section ends here */

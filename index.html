@@ -20,8 +20,8 @@
 </head>
 
 <body>
-  <div id="root-sec">
-    <nav class="navbar fixed-top bg-white shadow-sm py-3 px-2">
+  <div id="root-sec" class="bg-body-tertiary">
+    <nav class="navbar bg-white shadow-sm py-3">
       <div class="container" id="nav-flex">
         <a class="navbar-brand" href="#">
           <img src="./Assets/images/calendar.png" alt="calendar" width="35px" height="35px">
@@ -30,6 +30,23 @@
         <button class="btn btn-primary fw-medium float-sm-end mt-2 mt-sm-0">Add New Event</button>
       </div>
     </nav>
+    <div class="container d-flex flex-column mt-4">
+      <nav class="navbar bg-white shadow-custom p-3 rounded-2 secondary-nav d-flex gap-3 justify-content-center align-items-center">
+        <input type="text" placeholder="Search Events..." class="ps-3 rounded w-100 flex-grow-1 form-control seconadry-nav-select">
+        <select class="form-select  seconadry-nav-select" aria-label="Default select example">
+          <option value="1" selected>All Catagories</option>
+          <option value="2">Meeting</option>
+          <option value="3">Personal</option>
+          <option value="4">Work</option>
+          <option value="5">Holiday</option>
+        </select>
+        <select class="form-select  seconadry-nav-select" aria-label="Default select example">
+          <option value="1" selected>Today</option>
+          <option value="2">This Week</option>
+          <option value="3">This Month</option>
+        </select>
+      </nav>
+    </div>
   </div>
   <script src="./Assets/styles/bootstrap-5.3.5-dist/js/bootstrap.bundle.js"></script>
   <script src="./Assets/scripts/script.js"></script>
