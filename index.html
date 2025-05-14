@@ -5,47 +5,90 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="./Assets/styles/bootstrap-5.3.5-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css">
   <link rel="stylesheet" href="./Assets/styles/style.css">
   <link rel="stylesheet" media="screen and (min-width:768px)" href="./Assets/styles/desktop.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="./Assets/scripts/fullcalendar-6.1.17/dist/index.global.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
   <link href="https://cdn.datatables.net/v/dt/dt-2.3.0/datatables.min.css" rel="stylesheet"
     integrity="sha384-b6zpX2e8uzvhWek1oBTKdifu88SXYijvZlp44itAjiEbD8ic6XRiVFQ9F6u4gspj" crossorigin="anonymous">
   <script src="https://cdn.datatables.net/v/dt/dt-2.3.0/datatables.min.js"
     integrity="sha384-AFcRPcI5tCh/IuCki8nD5IrM9bWey0NmCM+Gyq+zHDmYZq9QlZ418kOdfglyNTWt"
     crossorigin="anonymous"></script>
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/jquery-ui-timepicker-addon@1.6.3/dist/jquery-ui-timepicker-addon.min.css">
+  <script
+    src="https://cdn.jsdelivr.net/npm/jquery-ui-timepicker-addon@1.6.3/dist/jquery-ui-timepicker-addon.min.js"></script>
   <title>Interactive Event Calendar</title>
 </head>
 
 <body>
   <div id="root-sec" class="bg-body-tertiary">
+    <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="eventModalTitle">Add New Event</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body d-flex flex-column gap-3">
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select" id="inputTitle" name="inputTitle"
+                placeholder="Title">
+              <label for="inputTitle" class="fw-bold">Title</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select" id="inputDate" name="inputDate"
+                placeholder="Date">
+              <label for="inputDate" class="fw-bold">Date</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select" id="inputTime" name="inputTime"
+                placeholder="Time">
+              <label for="inputTime" class="fw-bold">Time</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <nav class="navbar bg-white shadow-sm py-3">
       <div class="container" id="nav-flex">
         <a class="navbar-brand" href="#">
           <img src="./Assets/images/calendar.png" alt="calendar" width="35px" height="35px">
           <span class="fw-bold text-primary fs-fluid-1 ms-1 align-middle">Interactive Event Calendar</span>
         </a>
-        <button class="btn btn-primary fw-medium float-sm-end mt-2 mt-sm-0">Add New Event</button>
+        <button class="btn btn-primary fw-medium float-sm-end mt-2 mt-sm-0" data-bs-toggle="modal"
+          data-bs-target="#eventModal">Add New Event</button>
       </div>
     </nav>
-    <div class="container d-flex flex-column mt-4">
-      <nav class="navbar bg-white shadow-custom p-3 rounded-2 secondary-nav d-flex gap-3 justify-content-center align-items-center">
-        <input type="text" placeholder="Search Events..." class="ps-3 rounded w-100 flex-grow-1 form-control seconadry-nav-select">
-        <select class="form-select  seconadry-nav-select" aria-label="Default select example">
+    <div class="container d-flex flex-column mt-4 gap-4">
+      <nav
+        class="navbar bg-white shadow-custom p-3 rounded-2 secondary-nav d-flex gap-3 justify-content-center align-items-center">
+        <input type="text" placeholder="Search Events..."
+          class="ps-3 rounded w-100 flex-grow-1 form-control seconadry-nav-select" id="searchEvent" name="searchEvent">
+        <select class="form-select seconadry-nav-select" id="CatagorieSelect" aria-label="Default select example">
           <option value="1" selected>All Catagories</option>
           <option value="2">Meeting</option>
           <option value="3">Personal</option>
           <option value="4">Work</option>
           <option value="5">Holiday</option>
         </select>
-        <select class="form-select  seconadry-nav-select" aria-label="Default select example">
+        <select class="form-select  seconadry-nav-select" id=TimeSelect aria-label="Default select example">
           <option value="1" selected>Today</option>
           <option value="2">This Week</option>
           <option value="3">This Month</option>
         </select>
       </nav>
+      <section class="p-3 bg-white shadow-custom">
+
+      </section>
     </div>
   </div>
   <script src="./Assets/styles/bootstrap-5.3.5-dist/js/bootstrap.bundle.js"></script>

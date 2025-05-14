@@ -3,7 +3,7 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  box-sizing: border-box !important;
   font-family: "Manrope", sans-serif !important;
 }
 
@@ -14,6 +14,45 @@ html {
 .shadow-custom {
   box-shadow: 0 0 7px var(--bs-border-color) !important;
 }
+
+/* event modal section starts here */
+
+/* datepicker section starts here */
+
+.ui-datepicker {
+  border: none;
+  border-radius: 8px;
+}
+
+/* Header (month + year) */
+.ui-datepicker-header {
+  background: var(--bs-primary);
+  color: white;
+  border: none;
+}
+
+.ui-datepicker-calendar td a {
+  padding: 4px;
+  border-radius: 4px;
+}
+
+/* Hover + selected date */
+.ui-datepicker-calendar td a:hover,
+.ui-datepicker-calendar td.ui-datepicker-current-day a {
+  background: var(--bs-primary);
+  color: white;
+}
+
+button.ui-datepicker-current:hover,
+button.ui-datepicker-close:hover {
+  background: var(--bs-primary);
+  color: white;
+}
+
+
+/* datepicker section ends here */
+
+/* event modal section ends here */
 
 /* navbar section starts here */
 

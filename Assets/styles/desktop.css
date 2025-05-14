@@ -2,10 +2,12 @@ html {
   font-size: 16px !important;
 }
 
-/* navbar section starts here */
+/* container section starts here */
+/* secondary navbar section starts here */
 
 .secondary-nav>input[type="text"] {
   width: auto !important;
 }
 
-/* navbar section ends here */
+/* secondary navbar section ends here */
+/* container section ends here */
