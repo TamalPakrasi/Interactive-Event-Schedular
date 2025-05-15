@@ -1,7 +1,7 @@
 $(document).ready(function () {
   console.log('script is running....');
 
-  function datepickerWidthAdjust(input) {
+  function dateTimepickerWidthAdjust(input) {
     const inputWidth = $(input).outerWidth();
     setTimeout(() => {
       $("#ui-datepicker-div").css({
@@ -14,16 +14,42 @@ $(document).ready(function () {
     showButtonPanel: true,
     dateFormat: "dd-mm-yy",
     beforeShow: function (input) {
-      datepickerWidthAdjust(input);
+      dateTimepickerWidthAdjust(input);
     },
     onChangeMonthYear: function () {
-      datepickerWidthAdjust($("#inputDate"));
+      dateTimepickerWidthAdjust($("#inputDate"));
     }
   });
 
-  $('#inputTime').timepicker();
-
-  $('[data-bs-dismiss="modal"]').click(function () {
-    $('#eventModal input').val("");
+  $('#inputTime').timepicker({
+    beforeShow: function (input) {
+      dateTimepickerWidthAdjust(input);
+    },
   });
+
+  const eventModal = $('#eventModal')[0];
+
+  const eventModalObserver = new MutationObserver((mutations) => {
+    $.each(mutations, function (index, mutation) {
+      if (mutation.attributeName === 'class') {
+        const oldClasses = mutation.oldValue?.split(/\s+/) || [];
+        const newClasses = eventModal.className.split(/\s+/);
+        const removed = oldClasses.filter(cls => !newClasses.includes(cls));
+        if (removed.includes('show')) {
+          setTimeout(() => {
+            $('#eventModal input').val("");
+            $('#eventModal textarea').val("");
+            const defaultOption = $('#eventModal select').children().first();
+            defaultOption.prop('selected', true);            
+          }, 500);
+        }
+      }
+    });
+  })
+
+  eventModalObserver.observe(eventModal, {
+    attributes: true,
+    attributeFilter: ['class'],
+    attributeOldValue: true
+  })
 });

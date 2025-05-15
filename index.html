@@ -34,7 +34,7 @@
             <h1 class="modal-title fs-5" id="eventModalTitle">Add New Event</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body d-flex flex-column gap-3">
+          <div class="modal-body d-flex flex-column gap-4">
             <div class="form-floating">
               <input type="text" class="form-control seconadry-nav-select" id="inputTitle" name="inputTitle"
                 placeholder="Title">
@@ -49,6 +49,25 @@
               <input type="text" class="form-control seconadry-nav-select" id="inputTime" name="inputTime"
                 placeholder="Time">
               <label for="inputTime" class="fw-bold">Time</label>
+            </div>
+            <div class="form-floating">
+              <select class="form-select seconadry-nav-select" id="inputCatagorySelect" aria-label="Default select example">
+                <option value="1" selected>All Catagories</option>
+                <option value="2">Meeting</option>
+                <option value="3">Personal</option>
+                <option value="4">Work</option>
+                <option value="5">Holiday</option>
+              </select>
+              <label for="inputCatagorySelect" class="fw-bold">Catagory</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select" id="inputLocation" name="inputLocation"
+                placeholder="Location">
+              <label for="inputLocation" class="fw-bold">Location</label>
+            </div>
+            <div class="form-floating">
+              <textarea name="inputDescription" id="inputDescription" class="form-control seconadry-nav-select h-75" placeholder="desc"></textarea>
+              <label for="inputDescription" class="fw-bold">Description</label>
             </div>
           </div>
           <div class="modal-footer">

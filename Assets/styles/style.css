@@ -17,6 +17,10 @@ html {
 
 /* event modal section starts here */
 
+.btn-close:focus {
+  box-shadow: none !important;
+}
+
 /* datepicker section starts here */
 
 .ui-datepicker {
@@ -51,6 +55,29 @@ button.ui-datepicker-close:hover {
 
 
 /* datepicker section ends here */
+
+/* timepicker section starts here */
+
+.ui-timepicker-div .ui-widget-header,
+.ui-datepicker .ui-datepicker-buttonpane button.ui-datepicker-current,
+.ui-datepicker .ui-datepicker-buttonpane button {
+  background-color: var(--bs-primary);
+  color: white;
+}
+
+span.ui-slider-handle {
+  background-color: var(--bs-primary) !important;
+}
+
+/* timepicker section starts here */
+
+/* catagory selector section starts here */
+
+#inputCatagorySelect {
+  width: 100% !important;
+}
+
+/* catagory selector section ends here */
 
 /* event modal section ends here */
 
