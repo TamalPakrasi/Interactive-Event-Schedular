@@ -22,6 +22,7 @@
     href="https://cdn.jsdelivr.net/npm/jquery-ui-timepicker-addon@1.6.3/dist/jquery-ui-timepicker-addon.min.css">
   <script
     src="https://cdn.jsdelivr.net/npm/jquery-ui-timepicker-addon@1.6.3/dist/jquery-ui-timepicker-addon.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <title>Interactive Event Calendar</title>
 </head>
 
@@ -51,7 +52,8 @@
               <label for="inputTime" class="fw-bold">Time</label>
             </div>
             <div class="form-floating">
-              <select class="form-select seconadry-nav-select" id="inputCatagorySelect" aria-label="Default select example">
+              <select class="form-select seconadry-nav-select" id="inputCatagorySelect"
+                aria-label="Default select example">
                 <option value="1" selected>Select a catagory</option>
                 <option value="2">Meeting</option>
                 <option value="3">Personal</option>
@@ -66,13 +68,26 @@
               <label for="inputLocation" class="fw-bold">Location</label>
             </div>
             <div class="form-floating">
-              <textarea name="inputDescription" id="inputDescription" class="form-control seconadry-nav-select" placeholder="desc"></textarea>
+              <textarea name="inputDescription" id="inputDescription" class="form-control seconadry-nav-select"
+                placeholder="desc"></textarea>
               <label for="inputDescription" class="fw-bold">Description</label>
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" id="save-event-data">Save</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body w-100 h-100 p-0">
+            <div class="alert alert-danger m-0 p-0" role="alert">
+              <h1 class="fs-4 fw-bold border-bottom border-danger p-3">ALERT!!</h1>
+              <p class="fs-6 p-3 pb-0">Please fill up properly</p>
+            </div>
           </div>
         </div>
       </div>
@@ -105,13 +120,18 @@
           <option value="3">This Month</option>
         </select>
       </nav>
-      <section class="p-3 bg-white shadow-custom">
-
-      </section>
+      <swiper-container class="mySwiper h-100 w-100 p-3 bg-white shadow-custom rounded-2" init="false">
+        <swiper-slide class="text-center fs-4 bg-white d-flex justify-content-center align-items-center">Slide
+          1</swiper-slide>
+        <swiper-slide class="text-center fs-4 bg-white d-flex justify-content-center align-items-center">Slide
+          2</swiper-slide>
+      </swiper-container>
     </div>
   </div>
   <script src="./Assets/styles/bootstrap-5.3.5-dist/js/bootstrap.bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
   <script src="./Assets/scripts/script.js"></script>
+  <script src="./Assets/scripts/swiper-script.js"></script>
 </body>
 
 </html>

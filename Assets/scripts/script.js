@@ -97,6 +97,8 @@ $(document).ready(function () {
     return value;
   }
 
+  const alertModalObj = new bootstrap.Modal('#alertModal');
+
   $('#save-event-data').click(function () {
     const title = $('#inputTitle').val().trim();
     const date = checkEventDateFormat();
@@ -106,11 +108,14 @@ $(document).ready(function () {
     const description = $('#inputDescription').val().trim();
 
     if (!title || !date || !time || !catagory || !location) {
-      alert('Please fill first 5 fields');
+      alertModalObj.show();
       eventModalObj.hide();
+      setTimeout(() => {
+        alertModalObj.hide();
+      }, 5000);
       return;
     }
-
     eventModalObj.hide();
   });
+
 });
