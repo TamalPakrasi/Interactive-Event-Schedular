@@ -28,6 +28,7 @@ $(document).ready(function () {
   });
 
   const eventModal = $('#eventModal')[0];
+  const eventModalObj = new bootstrap.Modal(eventModal);
 
   const eventModalObserver = new MutationObserver((mutations) => {
     $.each(mutations, function (index, mutation) {
@@ -37,10 +38,10 @@ $(document).ready(function () {
         const removed = oldClasses.filter(cls => !newClasses.includes(cls));
         if (removed.includes('show')) {
           setTimeout(() => {
-            $('#eventModal input').val("");
-            $('#eventModal textarea').val("");
+            $('#eventModal .form-control').val("");
+            // $('#eventModal textarea').val("");
             const defaultOption = $('#eventModal select').children().first();
-            defaultOption.prop('selected', true);            
+            defaultOption.prop('selected', true);
           }, 500);
         }
       }
@@ -52,4 +53,64 @@ $(document).ready(function () {
     attributeFilter: ['class'],
     attributeOldValue: true
   })
+
+  function isLeapYear(year) {
+    return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0);
+  }
+
+  function checkEventDateFormat() {
+    const value = $('#inputDate').val().trim();
+    if (!/^\d{2}-\d{2}-\d{4}$/.test(value)) return null;
+
+    const [dd, mm, yyyy] = value.split('-');
+    const day = parseInt(dd, 10);
+    const month = parseInt(mm, 10);
+    const year = parseInt(yyyy, 10);
+
+    if (day < 1 || day > 31 || month < 1 || month > 12) return null;
+
+    if (month === 2 && day > 29) return null; 
+    if (month === 2 && day === 29 && !isLeapYear(year)) return null;
+    if (month === 4 || month === 6 || month === 9 || month === 11) {
+      if (day > 30) return null;
+    }
+
+    return value;
+  }
+
+  function checkEventTimeFormat() {
+    const value = $('#inputTime').val().trim();
+    if (!/^\d{2}:\d{2}/.test(value)) return null;
+
+    const [hh, mm] = value.split(':');
+    const hours = parseInt(hh, 10);
+    const mins = parseInt(mm, 10);
+
+    if (hours < 0 || mins < 0 ) return null;
+    return value;
+  }
+
+  function validateCatagory() {
+    const value = $('#inputCatagorySelect').find('option:selected').text();
+    const defaultOptionText = $('#eventModal select').children().first().text();
+    if (value === defaultOptionText) return null;
+    return value;
+  }
+
+  $('#save-event-data').click(function () {
+    const title = $('#inputTitle').val().trim();
+    const date = checkEventDateFormat();
+    const time = checkEventTimeFormat();
+    const catagory = validateCatagory();
+    const location = $('#inputLocation').val().trim();
+    const description = $('#inputDescription').val().trim();
+
+    if (!title || !date || !time || !catagory || !location) {
+      alert('Please fill first 5 fields');
+      eventModalObj.hide();
+      return;
+    }
+
+    eventModalObj.hide();
+  });
 });

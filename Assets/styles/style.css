@@ -79,6 +79,10 @@ span.ui-slider-handle {
 
 /* catagory selector section ends here */
 
+textarea {
+  resize: none !important;
+}
+
 /* event modal section ends here */
 
 /* navbar section starts here */
