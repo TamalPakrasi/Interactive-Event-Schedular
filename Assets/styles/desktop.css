@@ -10,4 +10,12 @@ html {
 }
 
 /* secondary navbar section ends here */
+
+.fc {
+  font-size: 1rem;
+}
+
+.fc-daygrid-day-frame {
+  padding: 6px !important;
+}
 /* container section ends here */

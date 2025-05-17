@@ -142,6 +142,29 @@ swiper-slide img {
   object-fit: cover;
 }
 
+/* calendar section starts here */
+
+#calendar {
+  width: 100%;
+  max-width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+.fc {
+  font-size: 0.7rem;
+}
+
+.fc-daygrid-day-frame {
+  padding: 1px !important;
+}
+
+.fc .fc-daygrid-day:hover {
+  cursor: pointer;
+}
+
+/* calendar section ends here */
 
 /* swiper section ends here */
 
@@ -149,7 +172,7 @@ swiper-slide img {
 
 
 /* media query section*/
-@media screen and (min-width:320px) {
+@media screen and (min-width:325px) {
   select.seconadry-nav-select {
     width: auto !important;
   }
@@ -159,5 +182,13 @@ swiper-slide img {
   #nav-flex {
     flex-direction: row;
     justify-content: space-between;
+  }
+
+  .fc {
+    font-size: 0.85rem;
+  }
+  
+  .fc-daygrid-day-frame {
+    padding: 2px !important;
   }
 }

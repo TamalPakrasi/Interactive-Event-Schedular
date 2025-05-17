@@ -1,4 +1,4 @@
-const swiperEl = document.querySelector('swiper-container');
+const swiperEl = document.querySelector('#viewSwiper');
 
 const params = {
   injectStyles: [`
@@ -35,6 +35,6 @@ const params = {
   },
 }
 
-Object.assign(swiperEl, params)
+Object.assign(swiperEl, params);
 
 swiperEl.initialize();

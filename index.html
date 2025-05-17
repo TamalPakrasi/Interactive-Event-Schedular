@@ -22,7 +22,6 @@
     href="https://cdn.jsdelivr.net/npm/jquery-ui-timepicker-addon@1.6.3/dist/jquery-ui-timepicker-addon.min.css">
   <script
     src="https://cdn.jsdelivr.net/npm/jquery-ui-timepicker-addon@1.6.3/dist/jquery-ui-timepicker-addon.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <title>Interactive Event Calendar</title>
 </head>
 
@@ -120,9 +119,10 @@
           <option value="3">This Month</option>
         </select>
       </nav>
-      <swiper-container class="mySwiper h-100 w-100 p-3 bg-white shadow-custom rounded-2" init="false">
-        <swiper-slide class="text-center fs-4 bg-white d-flex justify-content-center align-items-center">Slide
-          1</swiper-slide>
+      <swiper-container class="mySwiper h-100 w-100 p-3 bg-white shadow-custom rounded-2" init="false" id="viewSwiper">
+        <swiper-slide class="text-center fs-4 bg-white d-flex justify-content-center align-items-center">
+          <div id="calendar"></div>
+        </swiper-slide>
         <swiper-slide class="text-center fs-4 bg-white d-flex justify-content-center align-items-center">Slide
           2</swiper-slide>
       </swiper-container>
@@ -132,6 +132,7 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
   <script src="./Assets/scripts/script.js"></script>
   <script src="./Assets/scripts/swiper-script.js"></script>
+  <script src="./Assets/scripts/calendar.js"></script>
 </body>
 
 </html>
