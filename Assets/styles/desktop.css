@@ -16,6 +16,7 @@ html {
 }
 
 .fc-daygrid-day-frame {
+  aspect-ratio: 1.5 !important;
   padding: 6px !important;
 }
 /* container section ends here */

@@ -12,6 +12,9 @@
     integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="./Assets/scripts/fullcalendar-6.1.17/dist/index.global.min.js"></script>
+  <link href="
+https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css
+" rel="stylesheet">
   <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
   <link href="https://cdn.datatables.net/v/dt/dt-2.3.0/datatables.min.css" rel="stylesheet"
     integrity="sha384-b6zpX2e8uzvhWek1oBTKdifu88SXYijvZlp44itAjiEbD8ic6XRiVFQ9F6u4gspj" crossorigin="anonymous">
@@ -119,21 +122,29 @@
           <option value="3">This Month</option>
         </select>
       </nav>
-      <!-- <swiper-container class="mySwiper h-100 w-100 p-3 bg-white shadow-custom rounded-2" init="false" id="viewSwiper">
-        <swiper-slide class="text-center fs-4 bg-white d-flex justify-content-center align-items-center">
-          
-        </swiper-slide>
-        <swiper-slide class="text-center fs-4 bg-white d-flex justify-content-center align-items-center">Slide
-          2</swiper-slide>
-      </swiper-container> -->
-      <div id="calendar"></div>
+      <!-- <section class="bg-white shadow-custom rounded-2 p-3">
+        <div id="calendar"></div>
+      </section> -->
+      <section id="main-slider" class="splide bg-white shadow-custom rounded-2 p-3">
+        <div class="splide__track">
+          <ul class="splide__list">
+            <li class="splide__slide calendar__slide">
+              <div id="calendar"></div>
+            </li>
+            <li class="splide__slide">
+              <p>slide2</p>
+            </li>
+          </ul>
+        </div>
+        <div class="custom-pagination d-flex justify-content-center gap-2 py-2"></div>
+      </section>
     </div>
   </div>
-  <script src="./Assets/styles/bootstrap-5.3.5-dist/js/bootstrap.bundle.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+  <script src="./Assets/styles/bootstrap-5.3.5-dist/js/bootstrap.bundle.min.js"></script>
+  <script src="
+https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js
+"></script>
   <script src="./Assets/scripts/script.js"></script>
-  <script src="./Assets/scripts/swiper-script.js"></script>
-  <script src="./Assets/scripts/calendar.js"></script>
 </body>
 
 </html>

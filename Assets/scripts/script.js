@@ -115,7 +115,79 @@ $(document).ready(function () {
       }, 5000);
       return;
     }
+
     eventModalObj.hide();
+
   });
 
+  function formatChangeforDate(date) {
+    const localDateStr = new Date(date).toLocaleDateString('en-US')
+    const dateArr = localDateStr.split('/');
+    const [month, day, year] = dateArr;
+    return `${day.padStart(2, '0')}-${month.padStart(2, '0')}-${year.padStart(4, '0')}`;
+  }
+
+  const calendarEl = document.getElementById('calendar');
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    height: 'auto', // makes it responsive
+    selectable: true,
+    dateClick: function (info) {
+      const currentDate = this.getDate();
+
+      const currentMonthStart = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        1
+      );
+
+      const currentMonthEnd = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        1
+      );
+
+      if (info.date >= currentMonthStart && info.date <= currentMonthEnd) {
+        const date = formatChangeforDate(info.date);
+        $('#inputDate').val(date);
+        eventModalObj.show();
+      }
+    },
+    editable: true,
+  });
+  calendar.render();
+
+  window.addEventListener('resize', () => {
+    calendar.updateSize();
+  });
+
+  const splide = new Splide('#main-slider', {
+    type: 'loop',
+    perPage: 1,
+    arrows: false,
+    pagination: false,
+    autoplay: false,
+  }).mount();
+
+  const labels = ['Calendar View', 'List View'];
+  const paginationContainer = document.querySelector('.custom-pagination');
+  const buttonClass = ['border-0', 'px-3', 'py-2', 'fs-6', 'rounded-2', 'btn-secondary-subtle', 'slideButton']
+  const activeButton = ['primary-button', 'text-white'];
+
+  labels.forEach((label, index) => {
+    const button = document.createElement('button');
+    button.classList.add(...buttonClass);
+    if (index === 0) button.classList.add(...activeButton);
+    button.textContent = label;
+    button.addEventListener('click', (eve) => {
+      document.querySelectorAll('.slideButton').forEach((slideButton) => slideButton.classList.remove(...activeButton));
+      splide.go(index);
+      eve.target.classList.add(...activeButton);
+    });
+    paginationContainer.appendChild(button);
+  })
+
+  calendar.updateSize();
+  splide.refresh();
 });
