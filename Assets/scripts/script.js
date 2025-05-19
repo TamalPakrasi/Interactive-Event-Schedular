@@ -132,39 +132,39 @@ $(document).ready(function () {
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
     height: 'auto', // makes it responsive
-    selectable: true,
+    showNonCurrentDates: false,
+    fixedWeekCount: false,
     dateClick: function (info) {
-      const currentDate = this.getDate();
+      const clickedDate = new Date(info.date);
+      clickedDate.setHours(0, 0, 0, 0);
 
-      const currentMonthStart = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        1
-      );
+      const today = new Date(this.getDate());
+      today.setHours(0, 0, 0, 0);
+   
+      if (clickedDate < today) return;
 
-      const currentMonthEnd = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth() + 1,
-        1
-      );
+      const date = formatChangeforDate(info.date);
+      $('#inputDate').val(date);
+      eventModalObj.show();
+    },
+    dayCellClassNames: function (arg) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const cellDate = new Date(arg.date);
+      cellDate.setHours(0, 0, 0, 0);
 
-      if (info.date >= currentMonthStart && info.date <= currentMonthEnd) {
-        const date = formatChangeforDate(info.date);
-        $('#inputDate').val(date);
-        eventModalObj.show();
-      }
+      return (cellDate < today) ? ['fc-past-disabled'] : [];
     },
     editable: true,
   });
   calendar.render();
 
-  window.addEventListener('resize', () => {
-    calendar.updateSize();
-  });
 
   const splide = new Splide('#main-slider', {
     type: 'loop',
     perPage: 1,
+    drag: false,
+    autoHeight: true,
     arrows: false,
     pagination: false,
     autoplay: false,
@@ -190,4 +190,9 @@ $(document).ready(function () {
 
   calendar.updateSize();
   splide.refresh();
+
+  window.addEventListener('resize', () => {
+    calendar.updateSize();
+    splide.refresh();
+  });
 });
