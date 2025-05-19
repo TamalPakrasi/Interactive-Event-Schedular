@@ -95,6 +95,14 @@ textarea {
 
 /* event modal section ends here */
 
+/* event data modal section starts here */
+
+#eventDataModal input:focus {
+  outline: 0 !important;
+}
+
+/* event data modal section ends here */
+
 /* navbar section starts here */
 
 #nav-flex {

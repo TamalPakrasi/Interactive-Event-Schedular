@@ -1,6 +1,16 @@
 $(document).ready(function () {
   console.log('script is running....');
 
+  const bootstrapColors = {
+    primary: '#0d6efd',
+    secondary: '#6c757d',
+    success: '#198754',
+    danger: '#dc3545',
+    warning: '#ffc107',
+    info: '#0dcaf0',
+    dark: '#212529'
+  };
+
   function dateTimepickerWidthAdjust(input) {
     const inputWidth = $(input).outerWidth();
     setTimeout(() => {
@@ -10,7 +20,7 @@ $(document).ready(function () {
     }, 0);
   }
 
-  $("#inputDate").datepicker({
+  $("#inputStartDate").datepicker({
     showButtonPanel: true,
     dateFormat: "dd-mm-yy",
     beforeShow: function (input) {
@@ -21,7 +31,24 @@ $(document).ready(function () {
     }
   });
 
-  $('#inputTime').timepicker({
+  $("#inputEndDate").datepicker({
+    showButtonPanel: true,
+    dateFormat: "dd-mm-yy",
+    beforeShow: function (input) {
+      dateTimepickerWidthAdjust(input);
+    },
+    onChangeMonthYear: function () {
+      dateTimepickerWidthAdjust($("#inputDate"));
+    }
+  });
+
+  $('#inputStartTime').timepicker({
+    beforeShow: function (input) {
+      dateTimepickerWidthAdjust(input);
+    },
+  });
+
+  $('#inputEndTime').timepicker({
     beforeShow: function (input) {
       dateTimepickerWidthAdjust(input);
     },
@@ -39,7 +66,8 @@ $(document).ready(function () {
         if (removed.includes('show')) {
           setTimeout(() => {
             $('#eventModal .form-control').val("");
-            // $('#eventModal textarea').val("");
+            $('#inputEndTime').attr('disabled', '');
+            $('#inputEndDate').attr('disabled', '');
             const defaultOption = $('#eventModal select').children().first();
             defaultOption.prop('selected', true);
           }, 500);
@@ -58,8 +86,8 @@ $(document).ready(function () {
     return ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0);
   }
 
-  function checkEventDateFormat() {
-    const value = $('#inputDate').val().trim();
+  function checkEventDateFormat(point) {
+    const value = $(`#input${point}Date`).val().trim();
     if (!/^\d{2}-\d{2}-\d{4}$/.test(value)) return null;
 
     const [dd, mm, yyyy] = value.split('-');
@@ -78,8 +106,8 @@ $(document).ready(function () {
     return value;
   }
 
-  function checkEventTimeFormat() {
-    const value = $('#inputTime').val().trim();
+  function checkEventTimeFormat(point) {
+    const value = $(`#input${point}Time`).val().trim();
     if (!/^\d{2}:\d{2}/.test(value)) return null;
 
     const [hh, mm] = value.split(':');
@@ -90,6 +118,20 @@ $(document).ready(function () {
     return value;
   }
 
+  $('#inputStartTime').change(function () {
+    if (!$('#inputEndTime').val().length && ($(this).val().length === 5 || !$(this).val().length)) {
+      $('#inputEndTime').removeAttr('disabled');
+      $('#inputEndTime').val($(this).val());
+    }
+  })
+
+  $('#inputStartDate').change(function () {
+    if (!$('#inputEndDate').val().length && ($(this).val().length === 10 || !$(this).val().length)) {
+      $('#inputEndDate').removeAttr('disabled');
+      $('#inputEndDate').val($(this).val());
+    }
+  })
+
   function validateCatagory() {
     const value = $('#inputCatagorySelect').find('option:selected').text();
     const defaultOptionText = $('#eventModal select').children().first().text();
@@ -97,28 +139,67 @@ $(document).ready(function () {
     return value;
   }
 
+  function validDateSpan(startDate, endDate) {
+    const startDateArr = startDate.split('-');
+    const [sd, sm, sy] = startDateArr;
+    const startDateDay = new Date(`${sy}-${sm}-${sd}`);
+    startDateDay.setHours(0, 0, 0, 0);
+
+    const endDateArr = endDate.split('-');
+    const [ed, em, ey] = endDateArr;
+    const endDateDay = new Date(`${ey}-${em}-${ed}`);
+    endDateDay.setHours(0, 0, 0, 0);
+
+    const arr1 = [false, 'lesser'];
+    const arr2 = [true, 'greater'];
+    const arr3 = [true, 'same'];
+
+    if (endDateDay < startDateDay) return [...arr1];
+    else if (endDateDay > startDateDay) return [...arr2];
+    else if (
+      startDateDay.getFullYear() === endDateDay.getFullYear() &&
+      startDateDay.getMonth() === endDateDay.getMonth() &&
+      startDateDay.getDate() === endDateDay.getDate()
+    ) return [...arr3];
+  }
+
+  function validTimeSpan(startTime, endTime, startDate, endDate) {
+    const isValidDate = Array.from(validDateSpan(startDate, endDate));
+    if (isValidDate[1] === 'greater') return true;
+
+    const startHours = parseInt(startTime.split(':')[0], 10);
+    const endHours = parseInt(endTime.split(':')[0], 10);
+
+    if (startHours > endHours) return false;
+    else if (startHours <= endHours) return true;
+  }
+
   const alertModalObj = new bootstrap.Modal('#alertModal');
 
-  $('#save-event-data').click(function () {
-    const title = $('#inputTitle').val().trim();
-    const date = checkEventDateFormat();
-    const time = checkEventTimeFormat();
-    const catagory = validateCatagory();
-    const location = $('#inputLocation').val().trim();
-    const description = $('#inputDescription').val().trim();
+  const eventDataModal = $('#eventDataModal')[0];
+  const eventDataModalObj = new bootstrap.Modal(eventDataModal);
 
-    if (!title || !date || !time || !catagory || !location) {
-      alertModalObj.show();
-      eventModalObj.hide();
-      setTimeout(() => {
-        alertModalObj.hide();
-      }, 5000);
-      return;
-    }
+  const eventModalDataObserver = new MutationObserver((mutations) => {
+    $.each(mutations, function (index, mutation) {
+      if (mutation.attributeName === 'class') {
+        const oldClasses = mutation.oldValue?.split(/\s+/) || [];
+        const newClasses = eventDataModal.className.split(/\s+/);
+        const removed = oldClasses.filter(cls => !newClasses.includes(cls));
+        if (removed.includes('show')) {
+          setTimeout(() => {
+            $('#eventDataModal .form-control').val("");
+          }, 500);
+        }
+      }
+    });
+  })
 
-    eventModalObj.hide();
+  eventModalDataObserver.observe(eventDataModal, {
+    attributes: true,
+    attributeFilter: ['class'],
+    attributeOldValue: true
+  })
 
-  });
 
   function formatChangeforDate(date) {
     const localDateStr = new Date(date).toLocaleDateString('en-US')
@@ -140,11 +221,13 @@ $(document).ready(function () {
 
       const today = new Date(this.getDate());
       today.setHours(0, 0, 0, 0);
-   
+
       if (clickedDate < today) return;
 
       const date = formatChangeforDate(info.date);
-      $('#inputDate').val(date);
+      $('#inputStartDate').val(date);
+      $('#inputEndDate').removeAttr('disabled');
+      $('#inputEndDate').val(date);
       eventModalObj.show();
     },
     dayCellClassNames: function (arg) {
@@ -156,6 +239,18 @@ $(document).ready(function () {
       return (cellDate < today) ? ['fc-past-disabled'] : [];
     },
     editable: true,
+    eventClick: function (info) {
+      const event = info.event;
+      $('#outputTitle').val(event.title);
+      $('#outputStartDate').val(event.extendedProps.startDate);
+      $('#outputEndDate').val(event.extendedProps.endDate);
+      $('#outputStartTime').val(event.extendedProps.startTime);
+      $('#outputEndTime').val(event.extendedProps.endTime);
+      $('#outputCatagory').val(event.extendedProps.catagory);
+      $('#outputLocation').val(event.extendedProps.location);
+      $('#outputDescription').val(event.extendedProps.desc);
+      eventDataModalObj.show();
+    }
   });
   calendar.render();
 
@@ -194,5 +289,79 @@ $(document).ready(function () {
   window.addEventListener('resize', () => {
     calendar.updateSize();
     splide.refresh();
+  });
+
+  function ISOformat(date, point) {
+    const dateArr = date.split('-');
+    let [dd, mm, yyyy] = dateArr;
+    if (point === 'end') {
+      const day = parseInt(dd, 10) + 1;
+      dd = day.toString().padStart(2, '0');
+    }
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  function getRandomColor() {
+    const colors = Object.values(bootstrapColors);
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+
+
+  $('#save-event-data').click(function () {
+    const title = $('#inputTitle').val().trim();
+    const startDate = checkEventDateFormat('Start');
+    const endDate = checkEventDateFormat('End');
+    const startTime = checkEventTimeFormat('Start');
+    const endTime = checkEventTimeFormat('End');
+    const catagory = validateCatagory();
+    const location = $('#inputLocation').val().trim();
+    const description = $('#inputDescription').val().trim();
+
+    if (!title || !startDate || !endDate || !startTime || !endTime || !catagory || !location) {
+      $('#alert-content').text('Please Fill up properly');
+      alertModalObj.show();
+      eventModalObj.hide();
+      setTimeout(() => {
+        alertModalObj.hide();
+        $('#alert-content').text('');
+      }, 5000);
+      return;
+    }
+
+
+    const isValidDate = Array.from(validDateSpan(startDate, endDate));
+
+    if (!isValidDate[0] ||
+      !(validTimeSpan(startTime, endTime, startDate, endDate))
+    ) {
+      $('#alert-content').text('Invalid Date-Time Input');
+      alertModalObj.show();
+      eventModalObj.hide();
+      setTimeout(() => {
+        alertModalObj.hide();
+        $('#alert-content').text('');
+      }, 5000);
+      return;
+    }
+
+
+    calendar.addEvent({
+      title: title,
+      start: ISOformat(startDate, 'start'),
+      end: ISOformat(endDate, 'end'),
+      backgroundColor: getRandomColor(),
+      allDay: true,
+      extendedProps: {
+        startDate: startDate,
+        endDate: endDate,
+        startTime: startTime,
+        endTime: endTime,
+        location: location,
+        catagory: catagory,
+        desc: description
+      }
+    })
+
+    eventModalObj.hide();
   });
 });

@@ -44,14 +44,24 @@ https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css
               <label for="inputTitle" class="fw-bold">Title</label>
             </div>
             <div class="form-floating">
-              <input type="text" class="form-control seconadry-nav-select" id="inputDate" name="inputDate"
+              <input type="text" class="form-control seconadry-nav-select" id="inputStartDate" name="inputStartDate"
                 placeholder="Date">
-              <label for="inputDate" class="fw-bold">Date</label>
+              <label for="inputStartDate" class="fw-bold">Start Date</label>
             </div>
             <div class="form-floating">
-              <input type="text" class="form-control seconadry-nav-select" id="inputTime" name="inputTime"
+              <input type="text" class="form-control seconadry-nav-select" id="inputEndDate" name="inputEndDate"
+                placeholder="Date" disabled>
+              <label for="inputEndDate" class="fw-bold">End Date</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select" id="inputStartTime" name="inputStartTime"
                 placeholder="Time">
-              <label for="inputTime" class="fw-bold">Time</label>
+              <label for="inputStartTime" class="fw-bold">Start Time</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select" id="inputEndTime" name="inputEndTime"
+                placeholder="Time" disabled>
+              <label for="inputEndTime" class="fw-bold">End Time</label>
             </div>
             <div class="form-floating">
               <select class="form-select seconadry-nav-select" id="inputCatagorySelect"
@@ -82,13 +92,70 @@ https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css
         </div>
       </div>
     </div>
+    <div class="modal fade" id="eventDataModal" tabindex="-1" aria-labelledby="eventDateModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="eventDateModalTitle">Event Details</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body d-flex flex-column gap-4">
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputTitle" name="outputTitle"
+                placeholder="Title" readonly>
+              <label for="outputTitle" class="fw-bold">Title</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputStartDate" name="outputStartDate"
+                placeholder="Date" readonly>
+              <label for="outputStartDate" class="fw-bold">Start Date</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputEndDate" name="outputEndDate"
+                placeholder="Date" readonly>
+              <label for="outputEndDate" class="fw-bold">End Date</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputStartTime" name="outputStartTime"
+                placeholder="Time" readonly>
+              <label for="outputStartTime" class="fw-bold">Start Time</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputEndTime" name="outputEndTime"
+                placeholder="Time" readonly>
+              <label for="outputEndTime" class="fw-bold">End Time</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputCatagory" name="outputCatagory"
+                placeholder="Time" readonly>
+              <label for="outputCatagory" class="fw-bold">Catagory</label>
+            </div>
+            <div class="form-floating">
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputLocation" name="outputLocation"
+                placeholder="Location" readonly>
+              <label for="outputLocation" class="fw-bold">Location</label>
+            </div>
+            <div class="form-floating">
+              <input name="outputDescription" id="outputDescription" class="form-control seconadry-nav-select border-0"
+                placeholder="desc" readonly></input>
+              <label for="outputDescription" class="fw-bold">Description</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary">Edit</button>
+            <button type="button" class="btn btn-danger">Delete</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-body w-100 h-100 p-0">
             <div class="alert alert-danger m-0 p-0" role="alert">
               <h1 class="fs-4 fw-bold border-bottom border-danger p-3">ALERT!!</h1>
-              <p class="fs-6 p-3 pb-0">Please fill up properly</p>
+              <p class="fs-6 p-3 pb-0" id="alert-content"></p>
             </div>
           </div>
         </div>
