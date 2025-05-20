@@ -232,12 +232,10 @@ $(document).ready(function () {
   function RemoveEventFromStorage(id) {
     const eventArr = loadEventsFromStorage();
     const updatedEventArr = eventArr.filter((event) => event.id !== id)
-    console.log(updatedEventArr);
     localStorage.setItem('event-data', JSON.stringify(updatedEventArr));
   }
 
   function deleteEvent(id) {
-    console.log(id);
     const event = calendar.getEventById(id);
     RemoveEventFromStorage(id);
     if (event) event.remove();
@@ -249,6 +247,8 @@ $(document).ready(function () {
     $.each(eventArr, function (index, eachEvent) {
       if (eachEvent.id === id) {
         eachEvent.title = newData[0];
+        eachEvent.start = ISOformat(newData[1], 'start');
+        eachEvent.end = ISOformat(newData[2], 'end');
         eachEvent.extendedProps.startDate = newData[1];
         eachEvent.extendedProps.endDate = newData[2];
         eachEvent.extendedProps.startTime = newData[3];
@@ -280,6 +280,8 @@ $(document).ready(function () {
     editEventDataInStorage(JSON.parse(JSON.stringify(newData)), id);
     if (event) {
       event.setProp('title', newData[0]);
+      event.setStart(ISOformat(newData[1], 'start'));
+      event.setEnd(ISOformat(newData[2], 'end'));
       event.setExtendedProp('startDate', newData[1]);
       event.setExtendedProp('endDate', newData[2]);
       event.setExtendedProp('startTime', newData[3]);
