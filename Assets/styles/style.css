@@ -162,7 +162,7 @@ img[alt="calendar"] {
 }
 
 .fc {
-  font-size: 0.7rem;
+  font-size: 0.85rem !important;
 }
 
 .fc-daygrid-day-frame {

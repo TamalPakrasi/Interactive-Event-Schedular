@@ -290,6 +290,8 @@ $(document).ready(function () {
       event.setExtendedProp('desc', newData[6]);
       event.setExtendedProp('catagory', newData[7]);
     }
+    const selectedCatText = $('#CatagorieSelect').find('option:selected').text();
+    checkSelectedCatagory(selectedCatText);
     eventDataModalObj.hide();
   }
 
@@ -389,6 +391,18 @@ $(document).ready(function () {
         const id = $(this).attr('id').split('-').at(1);
         editForm(id);
       });
+    },
+    eventClassNames: function (arg) {
+      const viewType = arg.view.type;
+      switch (viewType) {
+        case 'dayGridMonth':
+          return [];
+        case 'dayGridWeek':
+          return ['fs-6'];
+        case 'dayGrid':
+          return ['fs-4'];
+        default: return [];
+      }
     }
   });
   calendar.render();
@@ -500,17 +514,82 @@ $(document).ready(function () {
       }
     }
 
+    addEventToLocalStorage(JSON.parse(JSON.stringify(event)));
+
     calendar.addEvent(event);
 
-    addEventToLocalStorage(JSON.parse(JSON.stringify(event)));
+    const selectedCatText = $('#CatagorieSelect').find('option:selected').text();
+    checkSelectedCatagory(selectedCatText);
 
     eventModalObj.hide();
   }
-
 
   $('#save-event-data').click(function () {
     if ($(this).text() === 'Save') {
       saveNewEventData();
     }
   });
+
+  $('#TimeSelect').on('change', function () {
+    const optionText = $(this).find('option:selected').text();
+
+    switch (optionText) {
+      case 'This Month':
+        calendar.changeView('dayGridMonth');
+        break;
+      case 'This Week':
+        calendar.changeView('dayGridWeek');
+        break;
+      case 'Today':
+        calendar.changeView('dayGrid');
+        break;
+      default:
+        calendar.changeView('dayGridMonth');
+        break;
+    }
+
+    setTimeout(() => {
+      calendar.updateSize();
+      splide.refresh();
+    }, 0);
+  })
+
+  function filterEvents(eventName) {
+    const eventArr = loadEventsFromStorage();
+    eventArr.filter((event) => {
+      if (event.extendedProps.catagory === eventName) {
+        calendar.addEventSource([event]);
+      }
+    });
+  }
+
+  function checkSelectedCatagory(optionText) {
+    const eventArr = loadEventsFromStorage();
+    if (eventArr.length) {
+      calendar.removeAllEvents();
+
+      switch (optionText) {
+        case 'All Catagories':
+          calendar.addEventSource(eventArr);
+          break;
+        case 'Meeting':
+          filterEvents('Meeting')
+          break;
+        case 'Personal':
+          filterEvents('Personal')
+          break;
+        case 'Work':
+          filterEvents('Work')
+          break;
+        case 'Holiday':
+          filterEvents('Holiday')
+          break;
+      }
+    }
+  }
+
+  $('#CatagorieSelect').on('change', function () {
+    const optionText = $(this).find('option:selected').text();
+    checkSelectedCatagory(optionText);
+  })
 });
