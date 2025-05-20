@@ -208,6 +208,131 @@ $(document).ready(function () {
     return `${day.padStart(2, '0')}-${month.padStart(2, '0')}-${year.padStart(4, '0')}`;
   }
 
+  function loadEventsFromStorage() {
+    return JSON.parse(localStorage.getItem('event-data') ?? '[]');
+  }
+
+  function addEventToLocalStorage(event) {
+    const arr = loadEventsFromStorage();
+    arr.push(event);
+    localStorage.setItem('event-data', JSON.stringify(arr));
+  }
+
+  function viewEvent(event) {
+    $('#outputTitle').val(event.title);
+    $('#outputStartDate').val(event.extendedProps.startDate);
+    $('#outputEndDate').val(event.extendedProps.endDate);
+    $('#outputStartTime').val(event.extendedProps.startTime);
+    $('#outputEndTime').val(event.extendedProps.endTime);
+    $('#outputCatagory').val(event.extendedProps.catagory);
+    $('#outputLocation').val(event.extendedProps.location);
+    $('#outputDescription').val(event.extendedProps.desc);
+  }
+
+  function RemoveEventFromStorage(id) {
+    const eventArr = loadEventsFromStorage();
+    const updatedEventArr = eventArr.filter((event) => event.id !== id)
+    console.log(updatedEventArr);
+    localStorage.setItem('event-data', JSON.stringify(updatedEventArr));
+  }
+
+  function deleteEvent(id) {
+    console.log(id);
+    const event = calendar.getEventById(id);
+    RemoveEventFromStorage(id);
+    if (event) event.remove();
+    eventDataModalObj.hide();
+  }
+
+  function editEventDataInStorage(newData, id) {
+    const eventArr = loadEventsFromStorage();
+    $.each(eventArr, function (index, eachEvent) {
+      if (eachEvent.id === id) {
+        eachEvent.title = newData[0];
+        eachEvent.extendedProps.startDate = newData[1];
+        eachEvent.extendedProps.endDate = newData[2];
+        eachEvent.extendedProps.startTime = newData[3];
+        eachEvent.extendedProps.endTime = newData[4];
+        eachEvent.extendedProps.location = newData[5];
+        eachEvent.extendedProps.desc = newData[6];
+        eachEvent.extendedProps.catagory = newData[7];
+      }
+    });
+    localStorage.setItem('event-data', JSON.stringify(eventArr));
+  }
+
+  function getNewData(button) {
+    const arr = [];
+    const allInputs = Array.from($(button).parent().prev().find('input.seconadry-nav-select'));
+    $.each(allInputs, function (index, input) {
+      arr.push($(input).val());
+    });
+    const descAreaText = $(button).parent().prev().find('textArea.seconadry-nav-select').val();
+    arr.push(descAreaText);
+    const selectValue = $(button).parent().prev().find('select.form-select').find('option:selected').text();
+    arr.push(selectValue);
+    return [...arr];
+  }
+
+  function editEvent(id, button) {
+    const event = calendar.getEventById(id);
+    const newData = getNewData(button);
+    editEventDataInStorage(JSON.parse(JSON.stringify(newData)), id);
+    if (event) {
+      event.setProp('title', newData[0]);
+      event.setExtendedProp('startDate', newData[1]);
+      event.setExtendedProp('endDate', newData[2]);
+      event.setExtendedProp('startTime', newData[3]);
+      event.setExtendedProp('endTime', newData[4]);
+      event.setExtendedProp('location', newData[5]);
+      event.setExtendedProp('desc', newData[6]);
+      event.setExtendedProp('catagory', newData[7]);
+    }
+    eventDataModalObj.hide();
+  }
+
+  function changeCatagory(catagory) {
+    const allOptions = Array.from($('#inputCatagorySelect').children());
+    const mainOptions = allOptions.filter((option) => !($(option).text() === 'Select a catagory'));
+    $.each(mainOptions, function (index, option) {
+      if ($(option).text() === catagory) {
+        $('#inputCatagorySelect').val($(option).val()).trigger('change');
+      }
+    });
+  }
+
+  function bringEventData() {
+    $('#inputTitle').val($('#outputTitle').val());
+    $('#inputStartDate').val($('#outputStartDate').val());
+    $('#inputEndDate').removeAttr('disabled').val($('#outputEndDate').val());
+    $('#inputStartTime').val($('#outputStartTime').val());
+    $('#inputEndTime').removeAttr('disabled').val($('#outputEndTime').val());
+    changeCatagory($('#outputCatagory').val());
+    $('#inputLocation').val($('#outputLocation').val());
+    $('#inputDescription').val($('#outputDescription').val());
+  }
+
+  function editForm(id) {
+    bringEventData();
+    eventDataModalObj.hide();
+    $('#eventModalTitle').text('Edit Event');
+    $('#save-event-data').text('Save Changes');
+    $('#save-event-data').removeAttr('eventID');
+    $('#save-event-data').attr('eventID', id);
+    eventModalObj.show();
+    $('#save-event-data').click(function (e) {
+      e.stopImmediatePropagation();
+      if ($(this).text() === 'Save Changes') {
+        const $id = $('#save-event-data').attr('eventID');
+        editEvent($id, this);
+        $('#save-event-data').removeAttr('eventID');
+        eventModalObj.hide();
+        $('#eventModalTitle').text('Add New Todo');
+        $('#save-event-data').text('Save');
+      }
+    });
+  }
+
   const calendarEl = document.getElementById('calendar');
 
   const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -238,18 +363,30 @@ $(document).ready(function () {
 
       return (cellDate < today) ? ['fc-past-disabled'] : [];
     },
+    events: loadEventsFromStorage(),
     editable: true,
     eventClick: function (info) {
       const event = info.event;
-      $('#outputTitle').val(event.title);
-      $('#outputStartDate').val(event.extendedProps.startDate);
-      $('#outputEndDate').val(event.extendedProps.endDate);
-      $('#outputStartTime').val(event.extendedProps.startTime);
-      $('#outputEndTime').val(event.extendedProps.endTime);
-      $('#outputCatagory').val(event.extendedProps.catagory);
-      $('#outputLocation').val(event.extendedProps.location);
-      $('#outputDescription').val(event.extendedProps.desc);
+      viewEvent(JSON.parse(JSON.stringify(event)));
+
+      $('#eventDataModal').find('.edit-event').removeAttr('id');
+      $('#eventDataModal').find('.delete-event').removeAttr('id');
+
+      $('#eventDataModal').find('.edit-event').attr('id', `e-${event.id}`);
+      $('#eventDataModal').find('.delete-event').attr('id', `d-${event.id}`);
+
       eventDataModalObj.show();
+
+      $(`#d-${event.id}`).click((e) => {
+        e.stopPropagation();
+        deleteEvent(event.id);
+      });
+
+      $(`#e-${event.id}`).click(function (e) {
+        e.stopImmediatePropagation();
+        const id = $(this).attr('id').split('-').at(1);
+        editForm(id);
+      });
     }
   });
   calendar.render();
@@ -306,8 +443,7 @@ $(document).ready(function () {
     return colors[Math.floor(Math.random() * colors.length)];
   }
 
-
-  $('#save-event-data').click(function () {
+  function saveNewEventData() {
     const title = $('#inputTitle').val().trim();
     const startDate = checkEventDateFormat('Start');
     const endDate = checkEventDateFormat('End');
@@ -344,8 +480,8 @@ $(document).ready(function () {
       return;
     }
 
-
-    calendar.addEvent({
+    const event = {
+      id: Date.now().toString(),
       title: title,
       start: ISOformat(startDate, 'start'),
       end: ISOformat(endDate, 'end'),
@@ -360,8 +496,19 @@ $(document).ready(function () {
         catagory: catagory,
         desc: description
       }
-    })
+    }
+
+    calendar.addEvent(event);
+
+    addEventToLocalStorage(JSON.parse(JSON.stringify(event)));
 
     eventModalObj.hide();
+  }
+
+
+  $('#save-event-data').click(function () {
+    if ($(this).text() === 'Save') {
+      saveNewEventData();
+    }
   });
 });
