@@ -294,6 +294,7 @@ $(document).ready(function () {
     }
     const selectedCatText = $('#CatagorieSelect').find('option:selected').text();
     checkSelectedCatagory(selectedCatText);
+    removeExpiredEvent();
     eventDataModalObj.hide();
   }
 
@@ -523,6 +524,8 @@ $(document).ready(function () {
     const selectedCatText = $('#CatagorieSelect').find('option:selected').text();
     checkSelectedCatagory(selectedCatText);
 
+    removeExpiredEvent();
+
     eventModalObj.hide();
   }
 
@@ -595,19 +598,35 @@ $(document).ready(function () {
     checkSelectedCatagory(optionText);
   })
 
-  const now = new Date();
+  async function removeExpiredEvent() {
+    const now = new Date();
+    const currentDate = now.toISOString().split('T')[0]; //yyyy-mm-dd
+    const currentTime = now.toTimeString().slice(0, 5); //hh:mm
 
-  calendar.getEvents().forEach((event) => {
-    const eventEnd = new Date(event.end);
+    calendar.getEvents().forEach((event) => {
+      const eventEnd = event.end instanceof Date ? event.end : new Date(event.end);
+      const eventEndDate = eventEnd.toISOString().split('T')[0]; //yyyy-mm-dd
 
-    if (event.end < now) {
-      const eventID = event.id;
-      const storedEventArr = loadEventsFromStorage();
-      const filteredEvents = storedEventArr.filter((event) => event.id !== eventID);
-      localStorage.setItem('event-data', JSON.stringify(filteredEvents));
-      event.remove();
-    }
-  })
+      const eventEndTime = event.extendedProps.endTime; //hh:mm
+
+      if ((eventEndDate <= currentDate) && (eventEndTime <= currentTime)) {
+        const eventID = event.id;
+        const storedEventArr = loadEventsFromStorage();
+        const filteredEvents = storedEventArr.filter((event) => event.id !== eventID);
+        localStorage.setItem('event-data', JSON.stringify(filteredEvents));
+        event.remove();
+      }
+    })
+  }
+
+  async function safeInterval() {
+    await removeExpiredEvent();
+    setInterval(() => {
+      safeInterval();
+    }, 1000 * 60);
+  }
+
+  safeInterval();
 
   $('#searchEvent').on('input', function () {
     const arr = [];
@@ -621,7 +640,7 @@ $(document).ready(function () {
 
     const searchingvalue = `^${value}`;
     const regExp = new RegExp(searchingvalue);
-    $.each(storedEventArr, function (index, eachEvent) { 
+    $.each(storedEventArr, function (index, eachEvent) {
       const eventTitle = eachEvent.title
       if (regExp.test(eventTitle)) arr.push(eachEvent);
     });

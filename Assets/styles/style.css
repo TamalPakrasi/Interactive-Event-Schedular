@@ -177,7 +177,7 @@ img[alt="calendar"] {
 .fc-past-disabled {
   position: relative !important;
   background-color:  #f0f0f0 !important;
-  pointer-events: none !important;
+  /* pointer-events: none !important; */
   opacity: 0.6 !important;
 }
 
