@@ -21,6 +21,7 @@ $(document).ready(function () {
   }
 
   $("#inputStartDate").datepicker({
+    minDate: 0,
     showButtonPanel: true,
     dateFormat: "dd-mm-yy",
     beforeShow: function (input) {
@@ -32,6 +33,7 @@ $(document).ready(function () {
   });
 
   $("#inputEndDate").datepicker({
+    minDate: 0,
     showButtonPanel: true,
     dateFormat: "dd-mm-yy",
     beforeShow: function (input) {
@@ -265,9 +267,9 @@ $(document).ready(function () {
     const arr = [];
     const allInputs = Array.from($(button).parent().prev().find('input.seconadry-nav-select'));
     $.each(allInputs, function (index, input) {
-      arr.push($(input).val());
+      arr.push($(input).val().trim());
     });
-    const descAreaText = $(button).parent().prev().find('textArea.seconadry-nav-select').val();
+    const descAreaText = $(button).parent().prev().find('textArea.seconadry-nav-select').val().trim();
     arr.push(descAreaText);
     const selectValue = $(button).parent().prev().find('select.form-select').find('option:selected').text();
     arr.push(selectValue);
@@ -306,14 +308,14 @@ $(document).ready(function () {
   }
 
   function bringEventData() {
-    $('#inputTitle').val($('#outputTitle').val());
-    $('#inputStartDate').val($('#outputStartDate').val());
-    $('#inputEndDate').removeAttr('disabled').val($('#outputEndDate').val());
-    $('#inputStartTime').val($('#outputStartTime').val());
-    $('#inputEndTime').removeAttr('disabled').val($('#outputEndTime').val());
-    changeCatagory($('#outputCatagory').val());
-    $('#inputLocation').val($('#outputLocation').val());
-    $('#inputDescription').val($('#outputDescription').val());
+    $('#inputTitle').val($('#outputTitle').val().trim());
+    $('#inputStartDate').val($('#outputStartDate').val().trim());
+    $('#inputEndDate').removeAttr('disabled').val($('#outputEndDate').val().trim());
+    $('#inputStartTime').val($('#outputStartTime').val().trim());
+    $('#inputEndTime').removeAttr('disabled').val($('#outputEndTime').val().trim());
+    changeCatagory($('#outputCatagory').val().trim());
+    $('#inputLocation').val($('#outputLocation').val().trim());
+    $('#inputDescription').val($('#outputDescription').val().trim());
   }
 
   function editForm(id) {
@@ -591,5 +593,39 @@ $(document).ready(function () {
   $('#CatagorieSelect').on('change', function () {
     const optionText = $(this).find('option:selected').text();
     checkSelectedCatagory(optionText);
+  })
+
+  const now = new Date();
+
+  calendar.getEvents().forEach((event) => {
+    const eventEnd = new Date(event.end);
+
+    if (event.end < now) {
+      const eventID = event.id;
+      const storedEventArr = loadEventsFromStorage();
+      const filteredEvents = storedEventArr.filter((event) => event.id !== eventID);
+      localStorage.setItem('event-data', JSON.stringify(filteredEvents));
+      event.remove();
+    }
+  })
+
+  $('#searchEvent').on('input', function () {
+    const arr = [];
+    const value = $(this).val().trim();
+    calendar.removeAllEvents();
+    const storedEventArr = loadEventsFromStorage();
+    if (!value) {
+      calendar.addEventSource(storedEventArr);
+      return;
+    }
+
+    const searchingvalue = `^${value}`;
+    const regExp = new RegExp(searchingvalue);
+    $.each(storedEventArr, function (index, eachEvent) { 
+      const eventTitle = eachEvent.title
+      if (regExp.test(eventTitle)) arr.push(eachEvent);
+    });
+
+    if (arr.length) calendar.addEventSource(arr);
   })
 });
