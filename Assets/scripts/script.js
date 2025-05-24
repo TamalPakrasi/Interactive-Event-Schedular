@@ -626,8 +626,47 @@ $(document).ready(function () {
     });
   }
 
+  function sortRowsCatagory(optionText) {
+    table.clear().draw();
+    const storedEventArr = loadEventsFromStorage();
+    if (optionText === 'All Catagories') {
+      const allData = [];
+      storedEventArr.forEach((event) => {
+        const newEvent = new eventClass(JSON.parse(JSON.stringify(event)));
+        allData.push(newEvent);
+      })
+      table.rows.add(allData).draw(false);
+
+      $('.view-event-table').click(function () {
+        viewButtonFunction(this);
+      })
+      $('#eventTable td').addClass(['p-3', 'text-center', 'white-space']);
+      return;
+    }
+
+    const dataSet = [];
+    storedEventArr.forEach((event) => {
+      const newEvent = new eventClass(JSON.parse(JSON.stringify(event)));
+      if (newEvent.catagory.includes(optionText)) {
+        dataSet.push(newEvent)
+      }
+    })
+    if (dataSet) {
+      table.rows.add(dataSet).draw(false);
+    }
+    $('#eventTable td').addClass(['p-3', 'text-center', 'white-space']);
+
+    $('.view-event-table').click(function () {
+      viewButtonFunction(this);
+    })
+  }
+
   function checkSelectedCatagory(optionText) {
     const eventArr = loadEventsFromStorage();
+    if ($('#list-view').hasClass('primary-button')) {
+      sortRowsCatagory(optionText);
+    }
+
     if (eventArr.length) {
       calendar.removeAllEvents();
 
@@ -636,16 +675,16 @@ $(document).ready(function () {
           calendar.addEventSource(eventArr);
           break;
         case 'Meeting':
-          filterEvents('Meeting')
+          filterEvents('Meeting');
           break;
         case 'Personal':
-          filterEvents('Personal')
+          filterEvents('Personal');
           break;
         case 'Work':
-          filterEvents('Work')
+          filterEvents('Work');
           break;
         case 'Holiday':
-          filterEvents('Holiday')
+          filterEvents('Holiday');
           break;
       }
     }
@@ -710,6 +749,7 @@ $(document).ready(function () {
     if (arr.length) calendar.addEventSource(arr);
   })
 
+  //datatables section
   function catgoryBadgeDeterminer(catagory) {
     const classNames = Object.keys(bootstrapColors);
     switch (catagory) {
@@ -737,7 +777,6 @@ $(document).ready(function () {
     }
   }
 
-  //datatables section
   const table = $('#eventTable').DataTable({
     order: [],
     columns: [
