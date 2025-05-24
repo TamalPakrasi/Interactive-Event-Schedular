@@ -205,6 +205,15 @@ img[alt="calendar"] {
   white-space: nowrap !important;
 }
 
+#eventTable td {
+  text-align: center !important;
+  padding: 1.5rem !important;
+  white-space:  nowrap !important;
+}
+
+.page-link:focus {
+  box-shadow: none !important;
+}
 
 /* dataTables section ends here */
 
