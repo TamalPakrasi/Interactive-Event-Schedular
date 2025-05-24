@@ -16,15 +16,12 @@
 https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css
 " rel="stylesheet">
   <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
-  <link href="https://cdn.datatables.net/v/dt/dt-2.3.0/datatables.min.css" rel="stylesheet"
-    integrity="sha384-b6zpX2e8uzvhWek1oBTKdifu88SXYijvZlp44itAjiEbD8ic6XRiVFQ9F6u4gspj" crossorigin="anonymous">
-  <script src="https://cdn.datatables.net/v/dt/dt-2.3.0/datatables.min.js"
-    integrity="sha384-AFcRPcI5tCh/IuCki8nD5IrM9bWey0NmCM+Gyq+zHDmYZq9QlZ418kOdfglyNTWt"
-    crossorigin="anonymous"></script>
   <link rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/jquery-ui-timepicker-addon@1.6.3/dist/jquery-ui-timepicker-addon.min.css">
   <script
     src="https://cdn.jsdelivr.net/npm/jquery-ui-timepicker-addon@1.6.3/dist/jquery-ui-timepicker-addon.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.bootstrap5.min.css">
+  <script src="https://cdn.datatables.net/2.3.1/js/dataTables.min.js"></script>
   <title>Interactive Event Calendar</title>
 </head>
 
@@ -106,33 +103,33 @@ https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css
               <label for="outputTitle" class="fw-bold">Title</label>
             </div>
             <div class="form-floating">
-              <input type="text" class="form-control seconadry-nav-select border-0" id="outputStartDate" name="outputStartDate"
-                placeholder="Date" readonly>
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputStartDate"
+                name="outputStartDate" placeholder="Date" readonly>
               <label for="outputStartDate" class="fw-bold">Start Date</label>
             </div>
             <div class="form-floating">
-              <input type="text" class="form-control seconadry-nav-select border-0" id="outputEndDate" name="outputEndDate"
-                placeholder="Date" readonly>
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputEndDate"
+                name="outputEndDate" placeholder="Date" readonly>
               <label for="outputEndDate" class="fw-bold">End Date</label>
             </div>
             <div class="form-floating">
-              <input type="text" class="form-control seconadry-nav-select border-0" id="outputStartTime" name="outputStartTime"
-                placeholder="Time" readonly>
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputStartTime"
+                name="outputStartTime" placeholder="Time" readonly>
               <label for="outputStartTime" class="fw-bold">Start Time</label>
             </div>
             <div class="form-floating">
-              <input type="text" class="form-control seconadry-nav-select border-0" id="outputEndTime" name="outputEndTime"
-                placeholder="Time" readonly>
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputEndTime"
+                name="outputEndTime" placeholder="Time" readonly>
               <label for="outputEndTime" class="fw-bold">End Time</label>
             </div>
             <div class="form-floating">
-              <input type="text" class="form-control seconadry-nav-select border-0" id="outputCatagory" name="outputCatagory"
-                placeholder="Time" readonly>
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputCatagory"
+                name="outputCatagory" placeholder="Time" readonly>
               <label for="outputCatagory" class="fw-bold">Catagory</label>
             </div>
             <div class="form-floating">
-              <input type="text" class="form-control seconadry-nav-select border-0" id="outputLocation" name="outputLocation"
-                placeholder="Location" readonly>
+              <input type="text" class="form-control seconadry-nav-select border-0" id="outputLocation"
+                name="outputLocation" placeholder="Location" readonly>
               <label for="outputLocation" class="fw-bold">Location</label>
             </div>
             <div class="form-floating">
@@ -176,14 +173,16 @@ https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css
         class="navbar bg-white shadow-custom p-3 rounded-2 secondary-nav d-flex gap-3 justify-content-center align-items-center">
         <input type="text" placeholder="Search Events by title..."
           class="ps-3 rounded w-100 flex-grow-1 form-control seconadry-nav-select" id="searchEvent" name="searchEvent">
-        <select class="form-select seconadry-nav-select" id="CatagorieSelect" aria-label="Default select example" style="cursor: pointer;">
+        <select class="form-select seconadry-nav-select" id="CatagorieSelect" aria-label="Default select example"
+          style="cursor: pointer;">
           <option value="1" selected>All Catagories</option>
           <option value="2">Meeting</option>
           <option value="3">Personal</option>
           <option value="4">Work</option>
           <option value="5">Holiday</option>
         </select>
-        <select class="form-select  seconadry-nav-select" id="TimeSelect" aria-label="Default select example" style="cursor: pointer;">
+        <select class="form-select  seconadry-nav-select" id="TimeSelect" aria-label="Default select example"
+          style="cursor: pointer;">
           <option value="1" selected>This Month</option>
           <option value="2">This Week</option>
           <option value="3">Today</option>
@@ -195,12 +194,12 @@ https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css
             <li class="splide__slide calendar__slide">
               <div id="calendar"></div>
             </li>
-            <li class="splide__slide">
-              <p>slide2</p>
+            <li class="splide__slide overflow-hidden">
+              <table id="eventTable" class="table table-striped table-bordered dt-responsive nowrap w-100 my-3"></table>
             </li>
           </ul>
         </div>
-        <div class="custom-pagination d-flex justify-content-center gap-2 py-2"></div>
+        <div class="custom-pagination d-flex justify-content-center gap-2 py-3"></div>
       </section>
     </div>
   </div>
@@ -208,6 +207,7 @@ https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css
   <script src="
 https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js
 "></script>
+  <script src="https://cdn.datatables.net/2.3.1/js/dataTables.bootstrap5.min.js"></script>
   <script src="./Assets/scripts/script.js"></script>
 </body>
 

@@ -319,20 +319,48 @@ $(document).ready(function () {
     $('#inputDescription').val($('#outputDescription').val().trim());
   }
 
-  function editForm(id) {
+  function editTable(event, rowIndex) {
+    const newEvent = new eventClass(event);
+    const row = table.row(rowIndex);
+    row.data(newEvent).draw(false);
+
+
+    $('.view-event-table').click(function () {
+      viewButtonFunction(this);
+    })
+  }
+
+  function assembleDataForTable(eventID, rowIndex) {
+    let event = null;
+    const storedEventArr = loadEventsFromStorage();
+    $.each(storedEventArr, function (index, eachEvent) {
+      if (eachEvent.id === eventID) {
+        event = JSON.parse(JSON.stringify(eachEvent));
+      }
+    });
+    editTable(event, rowIndex);
+  }
+
+  function editForm(id, rowIndex) {
     bringEventData();
     eventDataModalObj.hide();
     $('#eventModalTitle').text('Edit Event');
     $('#save-event-data').text('Save Changes');
     $('#save-event-data').removeAttr('eventID');
+    $('#save-event-data').removeAttr('rowIndex');
     $('#save-event-data').attr('eventID', id);
+    $('#save-event-data').attr('rowIndex', rowIndex);
     eventModalObj.show();
+
     $('#save-event-data').click(function (e) {
       e.stopImmediatePropagation();
       if ($(this).text() === 'Save Changes') {
         const $id = $('#save-event-data').attr('eventID');
+        const $rowIndex = Number($(this).attr('rowIndex'));
         editEvent($id, this);
+        if (!isNaN($rowIndex)) assembleDataForTable($id, $rowIndex);
         $('#save-event-data').removeAttr('eventID');
+        $('#save-event-data').removeAttr('rowIndex');
         eventModalObj.hide();
         $('#eventModalTitle').text('Add New Todo');
         $('#save-event-data').text('Save');
@@ -340,7 +368,38 @@ $(document).ready(function () {
     });
   }
 
-  const calendarEl = document.getElementById('calendar');
+  function eventTask(event, rowIndex) {
+    $('#eventDataModal').find('.edit-event').removeAttr('id');
+    $('#eventDataModal').find('.delete-event').removeAttr('id');
+    $('#eventDataModal').find('.delete-event').removeAttr('rowIndex');
+    $('#eventDataModal').find('.edit-event').removeAttr('rowIndex');
+
+    $('#eventDataModal').find('.edit-event').attr('id', `e-${event.id}`);
+    $('#eventDataModal').find('.delete-event').attr('id', `d-${event.id}`);
+    if (typeof rowIndex === 'number') {
+      $('#eventDataModal').find('.delete-event').attr('rowIndex', rowIndex);
+      $('#eventDataModal').find('.edit-event').attr('rowIndex', rowIndex);
+    }
+
+    eventDataModalObj.show();
+
+    $(`#d-${event.id}`).click((e) => {
+      const rowIndex = Number($(e.target).attr('rowIndex'));
+      const id = $(e.target).attr('id').split('-').at(1);
+      deleteEvent(id);
+      if (!isNaN(rowIndex)) table.row(rowIndex).remove().draw();
+      e.stopImmediatePropagation();
+    });
+
+    $(`#e-${event.id}`).click(function (e) {
+      e.stopImmediatePropagation();
+      const id = $(this).attr('id').split('-').at(1);
+      const rowIndex = $(this).attr('rowIndex');
+      editForm(id, rowIndex);
+    });
+  }
+
+  const calendarEl = document.querySelector('#calendar');
 
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
@@ -375,25 +434,7 @@ $(document).ready(function () {
     eventClick: function (info) {
       const event = info.event;
       viewEvent(JSON.parse(JSON.stringify(event)));
-
-      $('#eventDataModal').find('.edit-event').removeAttr('id');
-      $('#eventDataModal').find('.delete-event').removeAttr('id');
-
-      $('#eventDataModal').find('.edit-event').attr('id', `e-${event.id}`);
-      $('#eventDataModal').find('.delete-event').attr('id', `d-${event.id}`);
-
-      eventDataModalObj.show();
-
-      $(`#d-${event.id}`).click((e) => {
-        e.stopPropagation();
-        deleteEvent(event.id);
-      });
-
-      $(`#e-${event.id}`).click(function (e) {
-        e.stopImmediatePropagation();
-        const id = $(this).attr('id').split('-').at(1);
-        editForm(id);
-      });
+      eventTask(JSON.parse(JSON.stringify(event)), "");
     },
     eventClassNames: function (arg) {
       const viewType = arg.view.type;
@@ -412,8 +453,9 @@ $(document).ready(function () {
 
 
   const splide = new Splide('#main-slider', {
-    type: 'loop',
+    type: 'slide',
     perPage: 1,
+    rewind: false,
     drag: false,
     autoHeight: true,
     arrows: false,
@@ -429,14 +471,28 @@ $(document).ready(function () {
   labels.forEach((label, index) => {
     const button = document.createElement('button');
     button.classList.add(...buttonClass);
-    if (index === 0) button.classList.add(...activeButton);
+    if (index === 0) {
+      button.classList.add(...activeButton);
+      button.setAttribute('id', 'calendar-view');
+    };
+    if (index === 1) {
+      button.setAttribute('id', 'list-view');
+    }
     button.textContent = label;
     button.addEventListener('click', (eve) => {
       document.querySelectorAll('.slideButton').forEach((slideButton) => slideButton.classList.remove(...activeButton));
       splide.go(index);
       eve.target.classList.add(...activeButton);
+      if (eve.target.innerText === 'Calendar View') {
+        calendar.render();
+      } else if (eve.target.innerText === 'List View') {
+        setTimeout(() => {
+          calendar.destroy();
+        }, 500);
+      }
     });
     paginationContainer.appendChild(button);
+
   })
 
   calendar.updateSize();
@@ -526,6 +582,8 @@ $(document).ready(function () {
 
     removeExpiredEvent();
 
+    dataTable()
+
     eventModalObj.hide();
   }
 
@@ -598,6 +656,14 @@ $(document).ready(function () {
     checkSelectedCatagory(optionText);
   })
 
+  function removingWork(event) {
+    const eventID = event.id;
+    const storedEventArr = loadEventsFromStorage();
+    const filteredEvents = storedEventArr.filter((event) => event.id !== eventID);
+    localStorage.setItem('event-data', JSON.stringify(filteredEvents));
+    event.remove();
+  }
+
   async function removeExpiredEvent() {
     const now = new Date();
     const currentDate = now.toISOString().split('T')[0]; //yyyy-mm-dd
@@ -609,21 +675,17 @@ $(document).ready(function () {
 
       const eventEndTime = event.extendedProps.endTime; //hh:mm
 
-      if ((eventEndDate <= currentDate) && (eventEndTime <= currentTime)) {
-        const eventID = event.id;
-        const storedEventArr = loadEventsFromStorage();
-        const filteredEvents = storedEventArr.filter((event) => event.id !== eventID);
-        localStorage.setItem('event-data', JSON.stringify(filteredEvents));
-        event.remove();
-      }
+      if (eventEndDate < currentDate) removingWork(event);
+
+      if ((eventEndDate === currentDate) && (eventEndTime <= currentTime)) removingWork(event);
     })
   }
 
   async function safeInterval() {
     await removeExpiredEvent();
-    setInterval(() => {
+    setTimeout(() => {
       safeInterval();
-    }, 1000 * 60);
+    }, 1000);
   }
 
   safeInterval();
@@ -647,4 +709,99 @@ $(document).ready(function () {
 
     if (arr.length) calendar.addEventSource(arr);
   })
+
+  function catgoryBadgeDeterminer(catagory) {
+    const classNames = Object.keys(bootstrapColors);
+    switch (catagory) {
+      case 'Meeting':
+        return classNames[classNames.length - 1];
+      case 'Personal':
+        return classNames[4];
+      case 'Work':
+        return classNames[3];
+      case 'Holiday':
+        return classNames[2];
+    }
+  }
+
+  class eventClass {
+    constructor(event) {
+      this.title = event.title;
+      this.startDate = event.extendedProps.startDate;
+      this.endDate = event.extendedProps.endDate;
+      this.startTime = event.extendedProps.startTime;
+      this.endTime = event.extendedProps.endTime;
+      this.catagory = `<div class="badge p-2 text-bg-${catgoryBadgeDeterminer(event.extendedProps.catagory)}">${event.extendedProps.catagory}</div>`;
+      this.location = event.extendedProps.location;
+      this.viewButton = `<button class="btn btn-primary view-event-table" id="v-${event.id}">view</button>`;
+    }
+  }
+
+  //datatables section
+  const table = $('#eventTable').DataTable({
+    order: [],
+    columns: [
+      { data: 'title', title: 'Title' },
+      { data: 'startDate', title: 'Start Date' },
+      { data: 'endDate', title: 'End Date' },
+      { data: 'startTime', title: 'Start Time' },
+      { data: 'endTime', title: 'End Time' },
+      { data: 'catagory', title: 'Catagory' },
+      { data: 'location', title: 'Location' },
+      { data: 'viewButton', title: 'View' },
+    ],
+    language: {
+      paginate: {
+        first: "First",
+        last: "Last",
+        next: "Next",
+        previous: "Prev"
+      }
+    }
+  })
+
+
+  function addEventDataTable(dataSet) {
+    table.clear().draw();
+    table.rows.add(dataSet).draw(false);
+  }
+
+  function tableModification() {
+    $('#eventTable thead').addClass(['bg-primary', 'text-white']);
+    $('#eventTable th').css({ backgroundColor: 'inherit', color: 'inherit', border: 'none' });
+    $('#eventTable th, #eventTable td').addClass(['p-3', 'text-center', 'white-space']);
+    $('#dt-length-0').addClass(['seconadry-nav-select']);
+    $('#dt-search-0').parents().eq(1).remove();
+  }
+
+  function viewButtonFunction(button) {
+    let theEvent = null;
+    const eventID = $(button).attr('id').split('-')[1];
+    const storedEventArr = loadEventsFromStorage();
+    $.each(storedEventArr, function (index, eachEvent) {
+      if (eachEvent.id === eventID) {
+        theEvent = JSON.parse(JSON.stringify(eachEvent));
+      }
+    });
+    const rowIndex = table.row($(button).closest('tr')).index();
+    viewEvent(theEvent);
+    eventTask(theEvent, rowIndex);
+  }
+
+  function dataTable() {
+    const dataSet = [];
+    const storedEvents = loadEventsFromStorage();
+    storedEvents.forEach((event) => {
+      const eventObj = new eventClass(event);
+      dataSet.push(eventObj)
+    })
+    addEventDataTable(dataSet);
+    tableModification();
+
+    $('.view-event-table').click(function () {
+      viewButtonFunction(this);
+    })
+  }
+
+  $('#list-view').click(dataTable);
 });
