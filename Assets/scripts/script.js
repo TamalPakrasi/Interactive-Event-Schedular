@@ -1,35 +1,6 @@
-jQuery.extend(jQuery.fn.dataTableExt.oSort, {
-  "date-dd-mm-yyyy-pre": function (a) {
-    if (!a) return 0;
-    const dateParts = a.split('-');
-    // Convert to YYYYMMDD for proper sorting
-    return parseInt(dateParts[2] + dateParts[1] + dateParts[0], 10);
-  },
-  "date-dd-mm-yyyy-asc": function (a, b) {
-    return a - b;
-  },
-  "date-dd-mm-yyyy-desc": function (a, b) {
-    return b - a;
-  }
-});
-
-jQuery.extend(jQuery.fn.dataTableExt.oSort, {
-  "time-hh-mm-pre": function (a) {
-    if (!a) return 0;
-    const timeParts = a.split(':');
-    // Convert to total minutes for proper sorting
-    return parseInt(timeParts[0], 10) * 60 + parseInt(timeParts[1], 10);
-  },
-  "time-hh-mm-asc": function (a, b) {
-    return a - b;
-  },
-  "time-hh-mm-desc": function (a, b) {
-    return b - a;
-  }
-});
-
 console.log('script is running....');
 
+//bootstrap colors
 const bootstrapColors = {
   primary: '#0d6efd',
   secondary: '#6c757d',
@@ -40,50 +11,21 @@ const bootstrapColors = {
   dark: '#212529'
 };
 
-function dateTimepickerWidthAdjust(input) {
-  const inputWidth = $(input).outerWidth();
-  setTimeout(() => {
-    $("#ui-datepicker-div").css({
-      width: inputWidth + "px"
-    });
-  }, 0);
-}
-
 $("#inputStartDate").datepicker({
   minDate: 0,
   showButtonPanel: true,
   dateFormat: "dd-mm-yy",
-  beforeShow: function (input) {
-    dateTimepickerWidthAdjust(input);
-  },
-  onChangeMonthYear: function () {
-    dateTimepickerWidthAdjust($("#inputDate"));
-  }
 });
 
 $("#inputEndDate").datepicker({
   minDate: 0,
   showButtonPanel: true,
   dateFormat: "dd-mm-yy",
-  beforeShow: function (input) {
-    dateTimepickerWidthAdjust(input);
-  },
-  onChangeMonthYear: function () {
-    dateTimepickerWidthAdjust($("#inputDate"));
-  }
 });
 
-$('#inputStartTime').timepicker({
-  beforeShow: function (input) {
-    dateTimepickerWidthAdjust(input);
-  },
-});
+$('#inputStartTime').timepicker();
 
-$('#inputEndTime').timepicker({
-  beforeShow: function (input) {
-    dateTimepickerWidthAdjust(input);
-  },
-});
+$('#inputEndTime').timepicker();
 
 const eventModal = $('#eventModal')[0];
 const eventModalObj = new bootstrap.Modal(eventModal);
@@ -270,6 +212,9 @@ function deleteEvent(id) {
   const event = calendar.getEventById(id);
   RemoveEventFromStorage(id);
   if (event) event.remove();
+  if (!$('#list-view').hasClass('primary-button')) {
+    table.clear().draw();
+  }
   eventDataModalObj.hide();
 }
 
@@ -386,6 +331,11 @@ function editForm(id, rowIndex) {
       if (!isNaN($rowIndex)) assembleDataForTable($id, $rowIndex);
       $('#save-event-data').removeAttr('eventID');
       $('#save-event-data').removeAttr('rowIndex');
+
+      if (!$('#list-view').hasClass('primary-button')) {
+        table.clear().draw();
+      }
+
       eventModalObj.hide();
       $('#eventModalTitle').text('Add New Todo');
       $('#save-event-data').text('Save');
@@ -428,7 +378,7 @@ const calendarEl = document.querySelector('#calendar');
 
 const calendar = new FullCalendar.Calendar(calendarEl, {
   initialView: 'dayGridMonth',
-  height: 'auto', // makes it responsive
+  height: 'auto',
   showNonCurrentDates: false,
   fixedWeekCount: false,
   dateClick: function (info) {
@@ -476,7 +426,6 @@ const calendar = new FullCalendar.Calendar(calendarEl, {
 });
 calendar.render();
 
-
 const splide = new Splide('#main-slider', {
   type: 'slide',
   perPage: 1,
@@ -511,9 +460,7 @@ labels.forEach((label, index) => {
     if (eve.target.innerText === 'Calendar View') {
       calendar.render();
     } else if (eve.target.innerText === 'List View') {
-      setTimeout(() => {
-        calendar.destroy();
-      }, 500);
+      calendar.destroy();
     }
   });
   paginationContainer.appendChild(button);
@@ -522,11 +469,6 @@ labels.forEach((label, index) => {
 
 calendar.updateSize();
 splide.refresh();
-
-window.addEventListener('resize', () => {
-  calendar.updateSize();
-  splide.refresh();
-});
 
 function ISOformat(date, point) {
   const dateArr = date.split('-');
@@ -608,6 +550,10 @@ function saveNewEventData() {
   removeExpiredEvent();
 
   dataTable();
+
+  if (!$('#list-view').hasClass('primary-button')) {
+    table.clear().draw();
+  }
 
   eventModalObj.hide();
 }
@@ -721,6 +667,48 @@ async function safeInterval() {
 
 safeInterval();
 
+jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+  "date-dd-mm-yyyy-pre": function (a) {
+    if (!a) return 0;
+    const dateParts = a.split('-');
+    // Convert to YYYYMMDD for proper sorting
+    return parseInt(dateParts[2] + dateParts[1] + dateParts[0], 10);
+  },
+  "date-dd-mm-yyyy-asc": function (a, b) {
+    return a - b;
+  },
+  "date-dd-mm-yyyy-desc": function (a, b) {
+    return b - a;
+  }
+});
+
+jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+  "time-hh-mm-pre": function (a) {
+    if (!a) return 0;
+    const timeParts = a.split(':');
+    // Convert to total minutes for proper sorting
+    return parseInt(timeParts[0], 10) * 60 + parseInt(timeParts[1], 10);
+  },
+  "time-hh-mm-asc": function (a, b) {
+    return a - b;
+  },
+  "time-hh-mm-desc": function (a, b) {
+    return b - a;
+  }
+});
+
+$.fn.dataTable.ext.search = [];
+
+$.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+  const search = $('#searchEvent').val();
+  const searchLower = search.toLowerCase();
+
+  // IMPORTANT: Don't skip '0'
+  if (search === null || search.trim() === '') return true;
+
+  return data.some(cell => cell.toLowerCase().startsWith(searchLower));
+});
+
 $('#searchEvent').on('input', function () {
   const calendarEventArr = [];
   const value = $(this).val().trim();
@@ -730,7 +718,6 @@ $('#searchEvent').on('input', function () {
   if (!value) {
     calendar.addEventSource(storedEventArr);
     table.search('').draw();
-    // table.column(5).search('').draw();
     return;
   }
 
@@ -755,15 +742,7 @@ $('#searchEvent').on('input', function () {
     );
     calendar.addEventSource(removeDuplicates1);
   }
-
-  const searchOptions = {
-    regex: true,       // Use regex
-    smart: false,      // Disable smart search
-    caseInsensitive: true // Case-sensitive
-  };
-
-  table.search('^' + value, searchOptions).draw();
-  // table.column(5).search('^' + value, searchOptions).draw();
+  table.draw();
 })
 
 //datatables section
@@ -794,42 +773,55 @@ class eventClass {
   }
 }
 
+function initialTable() {
+  const isMobile = $(window).width() < 1200;
 
-const table = $('#eventTable').DataTable({
-  // dom: 'lrtip',
-  pageLength: 5,
-  lengthChange: false,
-  order: [],
-  columns: [
-    { data: 'title', title: 'Title' },
-    { data: 'startDate', title: 'Start Date' },
-    { data: 'endDate', title: 'End Date' },
-    { data: 'startTime', title: 'Start Time' },
-    { data: 'endTime', title: 'End Time' },
-    { data: 'catagory', title: 'Catagory' },
-    { data: 'location', title: 'Location' },
-    { data: 'viewButton', title: 'View' },
-  ],
-  columnDefs: [
-    {
-      targets: [1, 2],
-      type: 'date-dd-mm-yyyy'
-    },
-    { 
-      targets: [3, 4], 
-      type: 'time-hh-mm'
-  }
-  ],
-  language: {
-    paginate: {
-      first: "First",
-      last: "Last",
-      next: "Next",
-      previous: "Prev"
+  return $('#eventTable').DataTable({
+    scrollX: isMobile,
+    responsive: true,
+    pageLength: 5,
+    lengthChange: false,
+    order: [],
+    columns: [
+      { data: 'title', title: 'Title' },
+      { data: 'startDate', title: 'Start Date' },
+      { data: 'endDate', title: 'End Date' },
+      { data: 'startTime', title: 'Start Time' },
+      { data: 'endTime', title: 'End Time' },
+      { data: 'catagory', title: 'Catagory' },
+      { data: 'location', title: 'Location' },
+      { data: 'viewButton', title: 'View' },
+    ],
+    columnDefs: [
+      {
+        targets: [1, 2],
+        type: 'date-dd-mm-yyyy'
+      },
+      {
+        targets: [3, 4],
+        type: 'time-hh-mm'
+      }
+    ],
+    language: {
+      paginate: {
+        first: "First",
+        last: "Last",
+        next: "Next",
+        previous: "Prev"
+      }
     }
-  }
-})
+  })
+}
 
+let table = initialTable();
+
+
+$(window).on('resize', () => {
+  calendar.updateSize();
+  splide.refresh();
+  table.destroy();
+  table = initialTable();
+});
 
 function addEventDataTable(dataSet) {
   table.clear().draw();
@@ -837,11 +829,7 @@ function addEventDataTable(dataSet) {
 }
 
 function tableModification() {
-  $('#eventTable thead').addClass(['bg-primary', 'text-white']);
-  $('#eventTable th').css({ backgroundColor: 'inherit', color: 'inherit', border: 'none' });
-  $('#eventTable th, #eventTable td').addClass(['p-3', 'text-center', 'white-space']);
-  $('#dt-length-0').addClass(['seconadry-nav-select']);
-  $('#dt-search-0').parents().eq(1).remove();
+
 }
 
 function dataTable() {
@@ -863,6 +851,7 @@ $('#list-view').click(function () {
 });
 
 $('#calendar-view').click(function () {
+  table.clear().draw();
   $('#TimeSelect').show();
 })
 
@@ -880,3 +869,11 @@ function viewButtonFunction(button) {
   viewEvent(theEvent);
   eventTask(theEvent, rowIndex);
 }
+
+function deleteAllEvents() {
+  localStorage.removeItem('event-data');
+  calendar.removeAllEvents();
+  table.clear().draw();
+}
+
+$('input').attr('autocomplete', 'off')
