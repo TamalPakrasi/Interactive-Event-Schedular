@@ -31,16 +31,16 @@ This is a Simple, Responsive Interactive Event Schedular that is riched with fea
 
 <p>
 <a href="https://raw.githubusercontent.com/tamalpakrasi/Interactive-Event-Schedular/main/Assets/Screenshots/Calendar-Mobile-View-Month.png">
- <img src="./Assets/Screenshots/Calendar-Mobile-View-Month.png" alt="current-view-month-mobile" width="200" height="150" style="object-fit:cover">
+ <img src="./Assets/Screenshots/Calendar-Mobile-View-Month.png" alt="current-view-month-mobile" width="100" height="150" style="object-fit:cover">
 </a>
 <a href="https://raw.githubusercontent.com/tamalpakrasi/Interactive-Event-Schedular/main/Assets/Screenshots/Calendar-Mobile-View-Week.png">
- <img src="./Assets/Screenshots/Calendar-Mobile-View-Week.png" alt="current-view-week-mobile" width="200" height="150" style="object-fit:cover">
+ <img src="./Assets/Screenshots/Calendar-Mobile-View-Week.png" alt="current-view-week-mobile" width="100" height="150" style="object-fit:cover">
 </a>
 <a href="https://raw.githubusercontent.com/tamalpakrasi/Interactive-Event-Schedular/main/Assets/Screenshots/Calendar-Mobile-View-Today.png">
- <img src="./Assets/Screenshots/Calendar-Mobile-View-Today.png" alt="current-view-day-mobile" width="200" height="150" style="object-fit:cover">
+ <img src="./Assets/Screenshots/Calendar-Mobile-View-Today.png" alt="current-view-day-mobile" width="100" height="150" style="object-fit:cover">
 </a>
 <a href="https://raw.githubusercontent.com/tamalpakrasi/Interactive-Event-Schedular/main/Assets/Screenshots/Table-Mobile-View.png">
- <img src="./Assets/Screenshots/Table-Mobile-View.png" alt="current-view-day-mobile" width="200" height="150" style="object-fit:cover">
+ <img src="./Assets/Screenshots/Table-Mobile-View.png" alt="current-view-day-mobile" width="100" height="150" style="object-fit:cover">
 </a>
 </p>
 
