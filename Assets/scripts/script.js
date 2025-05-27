@@ -179,8 +179,51 @@ function validTimeSpan(startTime, endTime, startDate, endDate) {
   else if (startHours <= endHours) return true;
 }
 
+
+let oldData = [];
+
+function getOldDataToModal(oldData) {
+  $('#inputTitle').val(oldData[0]);
+  $('#inputStartDate').val(oldData[1]);
+  if (oldData[1] !== '') {
+    $('#inputEndDate').removeAttr('disabled').val(oldData[2]);
+  }
+  $('#inputStartTime').val(oldData[3]);
+  if (oldData[3] !== '') {
+    $('#inputEndTime').removeAttr('disabled').val(oldData[4]); 
+  }
+  if (oldData[7] !== 'Select a catagory') {
+    changeCatagory(oldData[7]); 
+  }
+  $('#inputLocation').val(oldData[5]);
+  $('#inputDescription').val(oldData[6]);
+}
+
 //alert modal for showing alerts
-const alertModalObj = new bootstrap.Modal('#alertModal');
+const theAlertModal = $('#alertModal')[0];
+const alertModalObj = new bootstrap.Modal(theAlertModal);
+
+const alertModalObserever = new MutationObserver((mutation) => {
+  $.each(mutation, function (index, mutation) {
+    if (mutation.attributeName === 'class') {
+      const oldClasses = mutation.oldValue?.split(' ');
+      const newClasses = eventDataModal.className.split(' ');
+      const removed = oldClasses.filter(cls => !newClasses.includes(cls));
+      if (removed.includes('show')) {
+        if (oldData.length) {
+          getOldDataToModal(JSON.parse(JSON.stringify(oldData)));
+        }
+        eventModalObj.show();
+      }
+    }
+  });
+})
+
+alertModalObserever.observe(theAlertModal, {
+  attributes: true,
+  attributeFilter: ['class'],
+  attributeOldValue: true
+})
 
 //modal for viewing saved event data
 const eventDataModal = $('#eventDataModal')[0];
@@ -190,8 +233,8 @@ const eventDataModalObj = new bootstrap.Modal(eventDataModal);
 const eventModalDataObserver = new MutationObserver((mutations) => {
   $.each(mutations, function (index, mutation) {
     if (mutation.attributeName === 'class') {
-      const oldClasses = mutation.oldValue?.split(/\s+/) || [];
-      const newClasses = eventDataModal.className.split(/\s+/);
+      const oldClasses = mutation.oldValue?.split(' ');
+      const newClasses = eventDataModal.className.split(' ');
       const removed = oldClasses.filter(cls => !newClasses.includes(cls));
       if (removed.includes('show')) {
         setTimeout(() => {
@@ -599,7 +642,8 @@ function getRandomColor() {
 }
 
 //To ensure new event data is saved
-function saveNewEventData() {
+function saveNewEventData(button) {
+  oldData = [];
   //getting data
   const title = $('#inputTitle').val().trim();
   const startDate = checkEventDateFormat('Start');
@@ -613,8 +657,10 @@ function saveNewEventData() {
   //ensuing all the required fields are clicked
   if (!title || !startDate || !endDate || !startTime || !endTime || !catagory || !location) {
     $('#alert-content').text('Please Fill up properly');
-    alertModalObj.show();
+    const data = getNewData(button);
+    oldData.push(...data);
     eventModalObj.hide();
+    alertModalObj.show();
     setTimeout(() => {
       alertModalObj.hide();
       $('#alert-content').text('');
@@ -630,8 +676,10 @@ function saveNewEventData() {
     !(validTimeSpan(startTime, endTime, startDate, endDate))
   ) {
     $('#alert-content').text('Invalid Date-Time Input');
-    alertModalObj.show();
+    const data = getNewData(button);
+    oldData.push(...data);
     eventModalObj.hide();
+    alertModalObj.show();
     setTimeout(() => {
       alertModalObj.hide();
       $('#alert-content').text('');
@@ -686,7 +734,7 @@ function saveNewEventData() {
 $('#save-event-data').click(function () {
   //works only to add new event
   if ($(this).text() === 'Save') {
-    saveNewEventData();
+    saveNewEventData(this);
   }
 });
 

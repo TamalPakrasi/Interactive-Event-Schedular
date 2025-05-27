@@ -31,16 +31,16 @@ This is a Simple, Responsive Interactive Event Schedular that is riched with fea
 
 <p>
 <a href="https://raw.githubusercontent.com/tamalpakrasi/Interactive-Event-Schedular/main/Assets/Screenshots/Calendar-Mobile-View-Month.png">
- <img src="./Assets/Screenshots/Calendar-Mobile-View-Month.png" alt="current-view-month-mobile" width="100" height="150" style="object-fit:cover">
+ <img src="./Assets/Screenshots/Calendar-Mobile-View-Month.png" alt="current-view-month-mobile" width="100" height="150">
 </a>
 <a href="https://raw.githubusercontent.com/tamalpakrasi/Interactive-Event-Schedular/main/Assets/Screenshots/Calendar-Mobile-View-Week.png">
- <img src="./Assets/Screenshots/Calendar-Mobile-View-Week.png" alt="current-view-week-mobile" width="100" height="150" style="object-fit:cover">
+ <img src="./Assets/Screenshots/Calendar-Mobile-View-Week.png" alt="current-view-week-mobile" width="100" height="150">
 </a>
 <a href="https://raw.githubusercontent.com/tamalpakrasi/Interactive-Event-Schedular/main/Assets/Screenshots/Calendar-Mobile-View-Today.png">
- <img src="./Assets/Screenshots/Calendar-Mobile-View-Today.png" alt="current-view-day-mobile" width="100" height="150" style="object-fit:cover">
+ <img src="./Assets/Screenshots/Calendar-Mobile-View-Today.png" alt="current-view-day-mobile" width="100" height="150">
 </a>
 <a href="https://raw.githubusercontent.com/tamalpakrasi/Interactive-Event-Schedular/main/Assets/Screenshots/Table-Mobile-View.png">
- <img src="./Assets/Screenshots/Table-Mobile-View.png" alt="current-view-day-mobile" width="100" height="150" style="object-fit:cover">
+ <img src="./Assets/Screenshots/Table-Mobile-View.png" alt="current-view-day-mobile" width="100" height="150">
 </a>
 </p>
 
@@ -48,6 +48,7 @@ This is a Simple, Responsive Interactive Event Schedular that is riched with fea
 
 - ✅ Adding new Events and Editing old Events
 - ✅ Calendar View and List View
+- ✅ Sliding View via button clicking
 - ✅ Deleting all or indiviadual Events
 - ✅ Search for events through Search bar
 - ✅ Sorting/Filtering events
@@ -60,6 +61,7 @@ This is a Simple, Responsive Interactive Event Schedular that is riched with fea
 - **Bootstrap 5.3.5**
 - **jQuery 3.7**
 - **jQuery-UI**
+- **Splide JS**
 - **FullCalendar**
 - **DataTables**
 
@@ -70,6 +72,7 @@ This is a Simple, Responsive Interactive Event Schedular that is riched with fea
 <img src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo-shadow.png" alt="Bootstarp5" height="30">
 <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/jquery/jquery-original.svg" alt="jQuery" height="30">
 <img src="./Assets/images/logo-jquery-ui.png" alt="jQuery-UI" height="30">
+<img src="./Assets/images/splide-logo.png" alt="jQuery-UI" height="30">
 <img src="./Assets/images/fullCalendarLogo.png" alt="jQuery-UI" height="30">
 <img src="./Assets/images/datatables.png" alt="jQuery-UI" height="30" style="object-fit:cover">
 </p>
@@ -185,19 +188,19 @@ Interactive-Event-Schedular/
 │   ├── images/        # Images and Logos
 │   |── Screenshots/   # ScreenShots of page
 |   |── styles/
-|   |   |── bootstrap-5.3.5-dist/   #bootstrap styles
-|   |   |── desktop.css    #CSS file for larger-screen
-|   |   |── style.css      #Common CSS file
+|   |   |── bootstrap-5.3.5-dist/   # Bootstrap styles
+|   |   |── desktop.css    # CSS file for larger-screen
+|   |   |── style.css      # Common CSS file
 |   |──scripts/ 
-|      |── fullcalendar-6.1.17/    #fullCalendar JS
-|      |── script.js     #main JS/jQuery file
+|      |── fullcalendar-6.1.17/    # fullCalendar JS
+|      |── script.js     # main JS/jQuery file
 |── .gitignore
 └── README.md
 ```
 
 ## 🌐✅ Browser Support
 
-<p style="display:flex; gap:15px;">
+<p>
 <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" alt="Chrome" height="35">  
 <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg" alt="Firefox" height="35">  
 <img src="https://upload.wikimedia.org/wikipedia/commons/4/49/Opera_2015_icon.svg" alt="Opera" height="35">  
